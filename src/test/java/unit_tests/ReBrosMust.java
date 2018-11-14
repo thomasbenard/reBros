@@ -8,10 +8,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 //TODO
-//Select complex types
 //Multiple elements in content
-//Extract class DataNode (?) from Tree
-//Ugly try/catch in ReBros
 //Clean JsonContent
 //Handle complex types equality in Result
 //Mutability Result

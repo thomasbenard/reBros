@@ -39,10 +39,10 @@ public class JsonContent implements Content {
     private Optional<String> findObjectMatchingKey(JSONObject jsonObject, String key) {
         for (String member : jsonObject.keySet()) {
             if (member.equals(key))
-                return Optional.ofNullable(jsonObject.get(key).toString());
-            JSONObject child = jsonObject.optJSONObject(member);
-            if (child != null)
-                return findObjectMatchingKey(child, key);
+                return Optional.of(jsonObject.get(key).toString());
+            Optional<JSONObject> child = Optional.ofNullable(jsonObject.optJSONObject(member));
+            if (child.isPresent())
+                return findObjectMatchingKey(child.get(), key);
         }
         return Optional.empty();
     }
