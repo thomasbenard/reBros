@@ -13,15 +13,14 @@ public class JsonContent implements Content {
     }
 
     public Optional<Match> get(@NotNull String key) {
-        return buildMatch(key, findObjectMatchKey(this.rootObject, key));
+        Optional<String> match = findObjectMatchingKey(this.rootObject, key);
+        return match.flatMap(s -> buildMatch(key, s));
     }
 
-    private Optional<Match> buildMatch(String key, Optional<String> match) {
-        if (!match.isPresent())
-            return Optional.empty();
-        if (!isLeafMatch(match.get()))
-            return Optional.of(new Match(key, match.get()));
-        JSONObject jsonObject = new JSONObject(match.get());
+    private Optional<Match> buildMatch(String key, String match) {
+        if (!isLeafMatch(match))
+            return Optional.of(new Match(key, match));
+        JSONObject jsonObject = new JSONObject(match);
         Match todomatch = new Match(key);
         for (String member : jsonObject.keySet()) {
             todomatch = todomatch.addField(member, jsonObject.get(member).toString());
@@ -38,13 +37,13 @@ public class JsonContent implements Content {
         }
     }
 
-    private Optional<String> findObjectMatchKey(JSONObject jsonObject, String key) {
+    private Optional<String> findObjectMatchingKey(JSONObject jsonObject, String key) {
         for (String member : jsonObject.keySet()) {
             if (member.equals(key))
                 return Optional.ofNullable(jsonObject.get(key).toString());
             JSONObject child = jsonObject.optJSONObject(member);
             if (child != null)
-                return findObjectMatchKey(child, key);
+                return findObjectMatchingKey(child, key);
         }
         return Optional.empty();
     }

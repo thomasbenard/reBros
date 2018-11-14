@@ -14,7 +14,6 @@ public class Result {
         if (!elements.containsKey(identifier))
             elements.put(identifier, new LinkedList<>());
         elements.get(identifier).add(match);
-        elements.get(identifier).sort(null);
     }
 
     @Override

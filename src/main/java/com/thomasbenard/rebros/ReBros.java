@@ -13,8 +13,7 @@ public class ReBros {
         Result result = new Result();
         for (String selectField : request.selectedFields()) {
             Optional<Match> fieldFound = content.get(selectField);
-            if (fieldFound.isPresent())
-                result.put(selectField, fieldFound.orElseThrow());
+            fieldFound.ifPresent(match -> result.put(selectField, match));
         }
         return result;
     }

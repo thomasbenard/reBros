@@ -13,7 +13,7 @@ public class Match {
     @NotNull
     private final List<@NotNull Match> children;
 
-    public Match(String name, String value) {
+    Match(String name, String value) {
         this.name = name;
         this.value = value;
         children = new ArrayList<>();
