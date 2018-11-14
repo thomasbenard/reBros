@@ -18,7 +18,6 @@ import static org.junit.Assert.assertThat;
 
 public class ReBrosMust {
 
-    private final String simpleInputData = "{id: 1, first_name: Jean, last_name: Bonneau}";
     private final String complexInputData = "{family: {person: {id: 1, first_name: Jean, last_name: Bonneau}}}";
 //    private final String moreComplexInputData = "{family: " +
 //            "{" +
@@ -37,7 +36,7 @@ public class ReBrosMust {
     public void return_empty_result_given_empty_request() {
         Request emptyRequest = new Request();
 
-        Result result = reBros(simpleInputData).run(emptyRequest);
+        Result result = reBros("{id: 1, first_name: Jean, last_name: Bonneau}").run(emptyRequest);
 
         Result emptyResult = new Result();
         assertThat(result, equalTo(emptyResult));

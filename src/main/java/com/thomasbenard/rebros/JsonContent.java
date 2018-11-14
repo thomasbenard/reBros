@@ -21,11 +21,10 @@ public class JsonContent implements Content {
         if (!isLeafMatch(match))
             return Optional.of(new Match(key, match));
         JSONObject jsonObject = new JSONObject(match);
-        Match todomatch = new Match(key);
-        for (String member : jsonObject.keySet()) {
-            todomatch = todomatch.addField(member, jsonObject.get(member).toString());
-        }
-        return Optional.of(todomatch);
+        Match complexMatch = new Match(key);
+        for (String member : jsonObject.keySet())
+            complexMatch = complexMatch.addField(member, jsonObject.get(member).toString());
+        return Optional.of(complexMatch);
     }
 
     private boolean isLeafMatch(String match) {
