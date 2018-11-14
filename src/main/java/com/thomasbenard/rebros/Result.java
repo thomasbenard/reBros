@@ -1,15 +1,20 @@
 package com.thomasbenard.rebros;
 
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Result {
 
-    private final Map<String, String> elements = new Hashtable<>();
+    private final Map<String, List<Match>> elements = new HashMap<>();
 
     public void put(String identifier, String value) {
-        elements.put(identifier, value);
+        put(identifier, new Match(identifier, value));
+    }
+
+    public void put(String identifier, Match match) {
+        if (!elements.containsKey(identifier))
+            elements.put(identifier, new LinkedList<>());
+        elements.get(identifier).add(match);
+        elements.get(identifier).sort(null);
     }
 
     @Override

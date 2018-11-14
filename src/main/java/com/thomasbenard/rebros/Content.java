@@ -1,5 +1,7 @@
 package com.thomasbenard.rebros;
 
+import java.util.Optional;
+
 public interface Content {
-    String get(String id);
+    Optional<Match> get(String id);
 }
