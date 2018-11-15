@@ -1,9 +1,9 @@
 package unit_tests;
 
 import com.thomasbenard.rebros.*;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -16,6 +16,9 @@ import static org.junit.Assert.assertThat;
 public class ReBrosMust {
 
     private final String complexInputData = "{family: {person: {id: 1, first_name: Jean, last_name: Bonneau}}}";
+    private final String familyIsAnArray = "{family: ["
+            + "{person: {id: 1, first_name: Jean, last_name: Bonneau}}, "
+            + "{person: {id: 2, first_name: Charles, last_name: Cuttery}}]}";
 //    private final String moreComplexInputData = "{family: " +
 //            "{" +
 //            "dog: {name: Cooper, age: 6, race: dawg, good_boy_status: true}, " +
@@ -79,12 +82,35 @@ public class ReBrosMust {
         assertThat(result, equalTo(expectedResult));
     }
 
-    @Ignore
     @Test
     public void result_can_store_multiple_elements() {
         Result expectedResult = new Result();
         expectedResult.put("id", "1");
         expectedResult.put("id", "2");
-        assertThat(expectedResult.toString(), equalTo("{id=[1, 2]}"));
+        assertThat(expectedResult.toString(), containsString("{id=["));
+        assertThat(expectedResult.toString(), containsString("Match{name='id', value=1, children=[]}"));
+        assertThat(expectedResult.toString(), containsString("Match{name='id', value=2, children=[]}"));
+        assertThat(expectedResult.toString(), containsString("]}"));
+    }
+
+    @Test
+    public void return_all_matching_results() {
+        Request request = new Request();
+        request.select("person");
+
+        Result result = reBros(familyIsAnArray).run(request);
+
+        Result expectedResult = new Result();
+        Match jean = new Match("person")
+                .addField("id", "1")
+                .addField("first_name", "Jean")
+                .addField("last_name", "Bonneau");
+        expectedResult.put("person", jean);
+        Match charles = new Match("person")
+                .addField("id", "2")
+                .addField("first_name", "Charles")
+                .addField("last_name", "Cuttery");
+        expectedResult.put("person", charles);
+        assertThat(result, equalTo(expectedResult));
     }
 }

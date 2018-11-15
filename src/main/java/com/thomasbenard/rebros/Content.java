@@ -1,7 +1,7 @@
 package com.thomasbenard.rebros;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface Content {
-    Optional<Match> get(String id);
+    List<Match> getAllMatches(String id);
 }

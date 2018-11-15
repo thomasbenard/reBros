@@ -1,6 +1,6 @@
 package com.thomasbenard.rebros;
 
-import java.util.Optional;
+import java.util.List;
 
 public class ReBros {
     private Content content;
@@ -12,8 +12,8 @@ public class ReBros {
     public Result run(Request request) {
         Result result = new Result();
         for (String selectField : request.selectedFields()) {
-            Optional<Match> fieldFound = content.get(selectField);
-            fieldFound.ifPresent(match -> result.put(selectField, match));
+            List<Match> matches = content.getAllMatches(selectField);
+            matches.forEach(match -> result.put(selectField, match));
         }
         return result;
     }
