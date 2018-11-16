@@ -37,6 +37,12 @@ public class Match {
         return new Match(this.name, newChildren);
     }
 
+    public Match addField(String fieldName, Match fieldValue) {
+        List<@NotNull Match> newChildren = new ArrayList<>(children);
+        newChildren.add(fieldValue);
+        return new Match(this.name, newChildren);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

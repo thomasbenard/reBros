@@ -1,17 +1,16 @@
 package unit_tests;
 
 import com.thomasbenard.rebros.*;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 //TODO
-//Multiple elements in content
 //Clean JsonContent
-//Handle complex types equality in Result
 //Mutability Result
+//Key in both Result and Match
 
 public class ReBrosMust {
 
@@ -67,6 +66,19 @@ public class ReBrosMust {
     }
 
     @Test
+    public void return_all_wanted_matches() {
+        Request request = new Request();
+        request.select("something");
+
+        Result result = reBros("{something: [1, 2]}").run(request);
+
+        Result expectedResult = new Result();
+        expectedResult.put("something", "1");
+        expectedResult.put("something", "2");
+        assertThat(result, equalTo(expectedResult));
+    }
+
+    @Test
     public void return_complex_types() {
         Request request = new Request();
         request.select("person");
@@ -80,17 +92,6 @@ public class ReBrosMust {
                 .addField("last_name", "Bonneau");
         expectedResult.put("person", complexMatch);
         assertThat(result, equalTo(expectedResult));
-    }
-
-    @Test
-    public void result_can_store_multiple_elements() {
-        Result expectedResult = new Result();
-        expectedResult.put("id", "1");
-        expectedResult.put("id", "2");
-        assertThat(expectedResult.toString(), containsString("{id=["));
-        assertThat(expectedResult.toString(), containsString("Match{name='id', value=1, children=[]}"));
-        assertThat(expectedResult.toString(), containsString("Match{name='id', value=2, children=[]}"));
-        assertThat(expectedResult.toString(), containsString("]}"));
     }
 
     @Test
@@ -111,6 +112,30 @@ public class ReBrosMust {
                 .addField("first_name", "Charles")
                 .addField("last_name", "Cuttery");
         expectedResult.put("person", charles);
+        assertThat(result, equalTo(expectedResult));
+    }
+
+    @Ignore
+    @Test
+    public void return_multiple_complex_objects() {
+        Request request = new Request();
+        request.select("family");
+
+        Result result = reBros(familyIsAnArray).run(request);
+
+        Result expectedResult = new Result();
+        Match jean = new Match("person")
+                .addField("id", "1")
+                .addField("first_name", "Jean")
+                .addField("last_name", "Bonneau");
+        Match charles = new Match("person")
+                .addField("id", "2")
+                .addField("first_name", "Charles")
+                .addField("last_name", "Cuttery");
+        Match family = new Match("family")
+                .addField("person", jean)
+                .addField("person", charles);
+        expectedResult.put("family", family);
         assertThat(result, equalTo(expectedResult));
     }
 }

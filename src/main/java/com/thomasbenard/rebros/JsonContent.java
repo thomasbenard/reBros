@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 public class JsonContent implements Content {
     private final JSONObject rootObject;
@@ -19,23 +18,43 @@ public class JsonContent implements Content {
     public List<Match> getAllMatches(@NotNull String key) {
         List<Match> matches = new ArrayList<>();
         List<String> rawMatches = findObjectMatchingKey(this.rootObject, key);
-        rawMatches.forEach(match -> matches.add(buildMatch(key, match)));
+        rawMatches.forEach(match -> matches.addAll(buildMatches(key, match)));
         return matches;
     }
 
-    private @NotNull Match buildMatch(String key, String match) {
-        if (!isLeafMatch(match))
-            return new Match(key, match);
-        JSONObject jsonObject = new JSONObject(match);
-        Match complexMatch = new Match(key);
-        for (String member : jsonObject.keySet())
-            complexMatch = complexMatch.addField(member, jsonObject.get(member).toString());
-        return complexMatch;
+    private List<Match> buildMatches(String key, String match) {
+        if (!isJsonObject(match) && !isJsonArray(match))
+            return List.of(new Match(key, match));
+        if (isJsonObject(match)) {
+            JSONObject jsonObject = new JSONObject(match);
+            Match complexMatch = new Match(key);
+            for (String member : jsonObject.keySet()) {
+                complexMatch = complexMatch.addField(member, jsonObject.get(member).toString());
+            }
+            return List.of(complexMatch);
+        } else {
+            List<Match> matches = new ArrayList<>();
+            JSONArray jsonArray = new JSONArray(match);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                //element does not contain key ! => bug ! TODO remove key from Match
+                matches.addAll(buildMatches(key, jsonArray.get(i).toString()));
+            }
+            return matches;
+        }
     }
 
-    private boolean isLeafMatch(String match) {
+    private boolean isJsonObject(String match) {
         try {
             new JSONObject(match);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean isJsonArray(String match) {
+        try {
+            new JSONArray(match);
             return true;
         } catch (Exception e) {
             return false;
@@ -46,15 +65,15 @@ public class JsonContent implements Content {
         for (String member : jsonObject.keySet()) {
             if (member.equals(key))
                 return List.of(jsonObject.get(key).toString());
-            Optional<JSONObject> child = Optional.ofNullable(jsonObject.optJSONObject(member));
-            if (child.isPresent())
-                return findObjectMatchingKey(child.get(), key);
-            Optional<JSONArray> childArray = Optional.ofNullable(jsonObject.optJSONArray(member));
-            if (childArray.isPresent()) {
-                int numberOfElements = childArray.get().length();
+            JSONObject child = jsonObject.optJSONObject(member);
+            if (child != null)
+                return findObjectMatchingKey(child, key);
+            JSONArray childArray = jsonObject.optJSONArray(member);
+            if (childArray != null) {
+                int numberOfElements = childArray.length();
                 List<String> matches = new ArrayList<>();
                 for (int i = 0; i < numberOfElements; i++) {
-                    matches.addAll(findObjectMatchingKey(childArray.get().getJSONObject(i), key));
+                    matches.addAll(findObjectMatchingKey(childArray.getJSONObject(i), key));
                 }
                 return matches;
             }
