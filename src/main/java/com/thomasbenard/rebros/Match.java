@@ -13,7 +13,11 @@ public class Match {
     @NotNull
     private final List<@NotNull Match> children;
 
-    Match(String name, String value) {
+    static Match fieldMatch(String fieldName, String fieldValue) {
+        return new Match(fieldName, fieldValue);
+    }
+
+    private Match(String name, String value) {
         this.name = name;
         this.value = value;
         children = new ArrayList<>();
@@ -33,7 +37,7 @@ public class Match {
 
     public Match addField(String fieldName, String fieldValue) {
         List<@NotNull Match> newChildren = new ArrayList<>(children);
-        newChildren.add(new Match(fieldName, fieldValue));
+        newChildren.add(fieldMatch(fieldName, fieldValue));
         return new Match(this.name, newChildren);
     }
 

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.thomasbenard.rebros.Match.fieldMatch;
+
 public class JsonContent implements Content {
     private final JSONObject rootObject;
 
@@ -24,7 +26,7 @@ public class JsonContent implements Content {
 
     private List<Match> buildMatches(String key, String match) {
         if (!isJsonObject(match) && !isJsonArray(match))
-            return List.of(new Match(key, match));
+            return List.of(fieldMatch(key, match));
         if (isJsonObject(match)) {
             JSONObject jsonObject = new JSONObject(match);
             Match complexMatch = new Match(key);

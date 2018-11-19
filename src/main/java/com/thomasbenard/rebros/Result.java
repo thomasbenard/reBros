@@ -2,6 +2,8 @@ package com.thomasbenard.rebros;
 
 import java.util.*;
 
+import static com.thomasbenard.rebros.Match.fieldMatch;
+
 public class Result {
 
     private final Map<String, List<Match>> elements;
@@ -15,7 +17,7 @@ public class Result {
     }
 
     public Result put(String identifier, String value) {
-        return put(identifier, new Match(identifier, value));
+        return put(identifier, fieldMatch(identifier, value));
     }
 
     public Result put(String identifier, Match match) {
