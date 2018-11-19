@@ -17,7 +17,7 @@ public class Result {
     }
 
     public Result put(String identifier, String value) {
-        return put(identifier, fieldMatch(identifier, value));
+        return put(identifier, fieldMatch(value));
     }
 
     public Result put(String identifier, Match match) {

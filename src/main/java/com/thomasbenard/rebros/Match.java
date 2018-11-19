@@ -13,12 +13,12 @@ public class Match {
     @NotNull
     private final Map<String, @NotNull Match> children;
 
-    static Match fieldMatch(String fieldName, String fieldValue) {
-        return new Match(fieldName, fieldValue);
+    static Match fieldMatch(String fieldValue) {
+        return new Match(fieldValue);
     }
 
-    private Match(String name, String value) {
-        this.name = name;
+    private Match(String value) {
+        this.name = "";
         this.value = value;
         children = new HashMap<>();
     }
@@ -37,7 +37,7 @@ public class Match {
 
     public Match addField(String fieldName, String fieldValue) {
         HashMap<String, Match> newChildren = new HashMap<>(children);
-        newChildren.put(fieldName, fieldMatch(fieldName, fieldValue));
+        newChildren.put(fieldName, fieldMatch(fieldValue));
         return new Match(this.name, newChildren);
     }
 

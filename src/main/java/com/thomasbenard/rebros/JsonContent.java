@@ -26,7 +26,7 @@ public class JsonContent implements Content {
 
     private List<Match> buildMatches(String key, String match) {
         if (!isJsonObject(match) && !isJsonArray(match))
-            return List.of(fieldMatch(key, match));
+            return List.of(fieldMatch(match));
         if (isJsonObject(match)) {
             JSONObject jsonObject = new JSONObject(match);
             Match complexMatch = new Match();
