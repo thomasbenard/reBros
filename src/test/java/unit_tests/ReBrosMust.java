@@ -18,13 +18,6 @@ public class ReBrosMust {
     private final String familyIsAnArray = "{family: ["
             + "{person: {id: 1, first_name: Jean, last_name: Bonneau}}, "
             + "{person: {id: 2, first_name: Charles, last_name: Cuttery}}]}";
-//    private final String moreComplexInputData = "{family: " +
-//            "{" +
-//            "dog: {name: Cooper, age: 6, race: dawg, good_boy_status: true}, " +
-//            "people: {id: 1, first_name: Jean, last_name: Bonneau}, " +
-//            "cat: {name: Felix}" +
-//            "}" +
-//            "}";
 
     private ReBros reBros(String jsonData) {
         Content content = new JsonContent(jsonData);
