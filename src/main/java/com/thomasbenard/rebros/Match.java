@@ -15,12 +15,16 @@ public class Match {
         return new Match(fieldValue);
     }
 
+    public static Match branchMatch() {
+        return new Match();
+    }
+
     private Match(String value) {
         this.value = value;
         children = new HashMap<>();
     }
 
-    public Match() {
+    private Match() {
         this.value = "";
         children = new HashMap<>();
     }

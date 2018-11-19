@@ -4,6 +4,7 @@ import com.thomasbenard.rebros.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static com.thomasbenard.rebros.Match.branchMatch;
 import static com.thomasbenard.rebros.Result.emptyResult;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -77,7 +78,7 @@ public class ReBrosMust {
 
         Result result = reBros(complexInputData).run(request);
 
-        Match complexMatch = new Match()
+        Match complexMatch = branchMatch()
                 .addField("id", "1")
                 .addField("first_name", "Jean")
                 .addField("last_name", "Bonneau");
@@ -93,11 +94,11 @@ public class ReBrosMust {
 
         Result result = reBros(familyIsAnArray).run(request);
 
-        Match jean = new Match()
+        Match jean = branchMatch()
                 .addField("id", "1")
                 .addField("first_name", "Jean")
                 .addField("last_name", "Bonneau");
-        Match charles = new Match()
+        Match charles = branchMatch()
                 .addField("id", "2")
                 .addField("first_name", "Charles")
                 .addField("last_name", "Cuttery");
@@ -116,15 +117,15 @@ public class ReBrosMust {
         Result result = reBros(familyIsAnArray).run(request);
 
         Result expectedResult = emptyResult();
-        Match jean = new Match()
+        Match jean = branchMatch()
                 .addField("id", "1")
                 .addField("first_name", "Jean")
                 .addField("last_name", "Bonneau");
-        Match charles = new Match()
+        Match charles = branchMatch()
                 .addField("id", "2")
                 .addField("first_name", "Charles")
                 .addField("last_name", "Cuttery");
-        Match family = new Match()
+        Match family = branchMatch()
                 .addField("person", jean)
                 .addField("person", charles);
         expectedResult.put("family", family);
