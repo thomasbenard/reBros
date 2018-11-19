@@ -29,8 +29,8 @@ public class Match {
         children = new HashMap<>();
     }
 
-    private Match(String name, HashMap<String, @NotNull Match> children) {
-        this.name = name;
+    private Match(HashMap<String, @NotNull Match> children) {
+        this.name = "";
         this.value = "";
         this.children = children;
     }
@@ -38,13 +38,13 @@ public class Match {
     public Match addField(String fieldName, String fieldValue) {
         HashMap<String, Match> newChildren = new HashMap<>(children);
         newChildren.put(fieldName, fieldMatch(fieldValue));
-        return new Match(this.name, newChildren);
+        return new Match(newChildren);
     }
 
     public Match addField(String fieldName, Match fieldValue) {
         HashMap<String, Match> newChildren = new HashMap<>(children);
         newChildren.put(fieldName, fieldValue);
-        return new Match(this.name, newChildren);
+        return new Match(newChildren);
     }
 
     @Override
