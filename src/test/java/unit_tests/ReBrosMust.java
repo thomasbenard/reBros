@@ -77,7 +77,7 @@ public class ReBrosMust {
 
         Result result = reBros(complexInputData).run(request);
 
-        Match complexMatch = new Match("person")
+        Match complexMatch = new Match()
                 .addField("id", "1")
                 .addField("first_name", "Jean")
                 .addField("last_name", "Bonneau");
@@ -93,11 +93,11 @@ public class ReBrosMust {
 
         Result result = reBros(familyIsAnArray).run(request);
 
-        Match jean = new Match("person")
+        Match jean = new Match()
                 .addField("id", "1")
                 .addField("first_name", "Jean")
                 .addField("last_name", "Bonneau");
-        Match charles = new Match("person")
+        Match charles = new Match()
                 .addField("id", "2")
                 .addField("first_name", "Charles")
                 .addField("last_name", "Cuttery");
@@ -116,15 +116,15 @@ public class ReBrosMust {
         Result result = reBros(familyIsAnArray).run(request);
 
         Result expectedResult = emptyResult();
-        Match jean = new Match("person")
+        Match jean = new Match()
                 .addField("id", "1")
                 .addField("first_name", "Jean")
                 .addField("last_name", "Bonneau");
-        Match charles = new Match("person")
+        Match charles = new Match()
                 .addField("id", "2")
                 .addField("first_name", "Charles")
                 .addField("last_name", "Cuttery");
-        Match family = new Match("family")
+        Match family = new Match()
                 .addField("person", jean)
                 .addField("person", charles);
         expectedResult.put("family", family);

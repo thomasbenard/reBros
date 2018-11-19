@@ -29,7 +29,7 @@ public class JsonContent implements Content {
             return List.of(fieldMatch(key, match));
         if (isJsonObject(match)) {
             JSONObject jsonObject = new JSONObject(match);
-            Match complexMatch = new Match(key);
+            Match complexMatch = new Match();
             for (String member : jsonObject.keySet()) {
                 complexMatch = complexMatch.addField(member, jsonObject.get(member).toString());
             }

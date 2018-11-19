@@ -1,8 +1,8 @@
 package com.thomasbenard.rebros;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Match {
@@ -11,7 +11,7 @@ public class Match {
     @NotNull
     private final String value;
     @NotNull
-    private final List<@NotNull Match> children;
+    private final Map<String, @NotNull Match> children;
 
     static Match fieldMatch(String fieldName, String fieldValue) {
         return new Match(fieldName, fieldValue);
@@ -20,30 +20,30 @@ public class Match {
     private Match(String name, String value) {
         this.name = name;
         this.value = value;
-        children = new ArrayList<>();
+        children = new HashMap<>();
     }
 
-    public Match(String name) {
-        this.name = name;
+    public Match() {
+        this.name = "";
         this.value = "";
-        children = new ArrayList<>();
+        children = new HashMap<>();
     }
 
-    private Match(String name, List<Match> children) {
+    private Match(String name, HashMap<String, @NotNull Match> children) {
         this.name = name;
         this.value = "";
         this.children = children;
     }
 
     public Match addField(String fieldName, String fieldValue) {
-        List<@NotNull Match> newChildren = new ArrayList<>(children);
-        newChildren.add(fieldMatch(fieldName, fieldValue));
+        HashMap<String, Match> newChildren = new HashMap<>(children);
+        newChildren.put(fieldName, fieldMatch(fieldName, fieldValue));
         return new Match(this.name, newChildren);
     }
 
     public Match addField(String fieldName, Match fieldValue) {
-        List<@NotNull Match> newChildren = new ArrayList<>(children);
-        newChildren.add(fieldValue);
+        HashMap<String, Match> newChildren = new HashMap<>(children);
+        newChildren.put(fieldName, fieldValue);
         return new Match(this.name, newChildren);
     }
 
@@ -59,8 +59,8 @@ public class Match {
 
     private boolean areChildrenEqual(Match match) {
         boolean areChildrenEqual = children.size() == match.children.size();
-        for (Match child : children) {
-            areChildrenEqual &= match.children.contains(child);
+        for (String field : children.keySet()) {
+            areChildrenEqual &= children.get(field).equals(match.children.get(field));
         }
         return areChildrenEqual;
     }
