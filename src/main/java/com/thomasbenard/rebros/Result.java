@@ -6,6 +6,10 @@ public class Result {
 
     private final Map<String, List<Match>> elements = new HashMap<>();
 
+    public static Result emptyResult() {
+        return new Result();
+    }
+
     public void put(String identifier, String value) {
         put(identifier, new Match(identifier, value));
     }

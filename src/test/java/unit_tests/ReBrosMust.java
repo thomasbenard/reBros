@@ -4,6 +4,7 @@ import com.thomasbenard.rebros.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static com.thomasbenard.rebros.Result.emptyResult;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -30,8 +31,7 @@ public class ReBrosMust {
 
         Result result = reBros("{id: 1, first_name: Jean, last_name: Bonneau}").run(emptyRequest);
 
-        Result emptyResult = new Result();
-        assertThat(result, equalTo(emptyResult));
+        assertThat(result, equalTo(emptyResult()));
     }
 
     @Test
@@ -41,8 +41,7 @@ public class ReBrosMust {
 
         Result result = reBros(complexInputData).run(request);
 
-        Result emptyResult = new Result();
-        assertThat(result, equalTo(emptyResult));
+        assertThat(result, equalTo(emptyResult()));
     }
 
     @Test
@@ -52,7 +51,7 @@ public class ReBrosMust {
 
         Result result = reBros(complexInputData).run(request);
 
-        Result expectedResult = new Result();
+        Result expectedResult = emptyResult();
         expectedResult.put("id", "1");
         expectedResult.put("last_name", "Bonneau");
         assertThat(result, equalTo(expectedResult));
@@ -65,7 +64,7 @@ public class ReBrosMust {
 
         Result result = reBros("{something: [1, 2]}").run(request);
 
-        Result expectedResult = new Result();
+        Result expectedResult = emptyResult();
         expectedResult.put("something", "1");
         expectedResult.put("something", "2");
         assertThat(result, equalTo(expectedResult));
@@ -78,7 +77,7 @@ public class ReBrosMust {
 
         Result result = reBros(complexInputData).run(request);
 
-        Result expectedResult = new Result();
+        Result expectedResult = emptyResult();
         Match complexMatch = new Match("person")
                 .addField("id", "1")
                 .addField("first_name", "Jean")
@@ -94,7 +93,7 @@ public class ReBrosMust {
 
         Result result = reBros(familyIsAnArray).run(request);
 
-        Result expectedResult = new Result();
+        Result expectedResult = emptyResult();
         Match jean = new Match("person")
                 .addField("id", "1")
                 .addField("first_name", "Jean")
@@ -116,7 +115,7 @@ public class ReBrosMust {
 
         Result result = reBros(familyIsAnArray).run(request);
 
-        Result expectedResult = new Result();
+        Result expectedResult = emptyResult();
         Match jean = new Match("person")
                 .addField("id", "1")
                 .addField("first_name", "Jean")
