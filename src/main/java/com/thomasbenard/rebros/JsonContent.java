@@ -20,11 +20,11 @@ public class JsonContent implements Content {
     public List<Match> getAllMatches(@NotNull String key) {
         List<Match> matches = new ArrayList<>();
         List<String> rawMatches = findObjectMatchingKey(this.rootObject, key);
-        rawMatches.forEach(match -> matches.addAll(buildMatches(key, match)));
+        rawMatches.forEach(match -> matches.addAll(buildMatches(match)));
         return matches;
     }
 
-    private List<Match> buildMatches(String key, String match) {
+    private List<Match> buildMatches(String match) {
         if (!isJsonObject(match) && !isJsonArray(match))
             return List.of(fieldMatch(match));
         if (isJsonObject(match)) {
@@ -39,7 +39,7 @@ public class JsonContent implements Content {
             JSONArray jsonArray = new JSONArray(match);
             for (int i = 0; i < jsonArray.length(); i++) {
                 //element does not contain key ! => bug ! TODO remove key from Match
-                matches.addAll(buildMatches(key, jsonArray.get(i).toString()));
+                matches.addAll(buildMatches(jsonArray.get(i).toString()));
             }
             return matches;
         }
