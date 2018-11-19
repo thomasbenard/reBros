@@ -4,20 +4,25 @@ import java.util.*;
 
 public class Result {
 
-    private final Map<String, List<Match>> elements = new HashMap<>();
+    private final Map<String, List<Match>> elements;
+
+    private Result(Map<String, List<Match>> elements) {
+        this.elements = elements;
+    }
 
     public static Result emptyResult() {
-        return new Result();
+        return new Result(new HashMap<>());
     }
 
-    public void put(String identifier, String value) {
-        put(identifier, new Match(identifier, value));
+    public Result put(String identifier, String value) {
+        return put(identifier, new Match(identifier, value));
     }
 
-    public void put(String identifier, Match match) {
+    public Result put(String identifier, Match match) {
         if (!elements.containsKey(identifier))
             elements.put(identifier, new LinkedList<>());
         elements.get(identifier).add(match);
+        return this;
     }
 
     @Override

@@ -51,9 +51,9 @@ public class ReBrosMust {
 
         Result result = reBros(complexInputData).run(request);
 
-        Result expectedResult = emptyResult();
-        expectedResult.put("id", "1");
-        expectedResult.put("last_name", "Bonneau");
+        Result expectedResult = emptyResult()
+                .put("id", "1")
+                .put("last_name", "Bonneau");
         assertThat(result, equalTo(expectedResult));
     }
 
@@ -64,9 +64,9 @@ public class ReBrosMust {
 
         Result result = reBros("{something: [1, 2]}").run(request);
 
-        Result expectedResult = emptyResult();
-        expectedResult.put("something", "1");
-        expectedResult.put("something", "2");
+        Result expectedResult = emptyResult()
+                .put("something", "1")
+                .put("something", "2");
         assertThat(result, equalTo(expectedResult));
     }
 
@@ -77,12 +77,12 @@ public class ReBrosMust {
 
         Result result = reBros(complexInputData).run(request);
 
-        Result expectedResult = emptyResult();
         Match complexMatch = new Match("person")
                 .addField("id", "1")
                 .addField("first_name", "Jean")
                 .addField("last_name", "Bonneau");
-        expectedResult.put("person", complexMatch);
+        Result expectedResult = emptyResult()
+                .put("person", complexMatch);
         assertThat(result, equalTo(expectedResult));
     }
 
@@ -93,17 +93,17 @@ public class ReBrosMust {
 
         Result result = reBros(familyIsAnArray).run(request);
 
-        Result expectedResult = emptyResult();
         Match jean = new Match("person")
                 .addField("id", "1")
                 .addField("first_name", "Jean")
                 .addField("last_name", "Bonneau");
-        expectedResult.put("person", jean);
         Match charles = new Match("person")
                 .addField("id", "2")
                 .addField("first_name", "Charles")
                 .addField("last_name", "Cuttery");
-        expectedResult.put("person", charles);
+        Result expectedResult = emptyResult()
+                .put("person", jean)
+                .put("person", charles);
         assertThat(result, equalTo(expectedResult));
     }
 

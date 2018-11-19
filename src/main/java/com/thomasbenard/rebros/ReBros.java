@@ -2,6 +2,8 @@ package com.thomasbenard.rebros;
 
 import java.util.List;
 
+import static com.thomasbenard.rebros.Result.emptyResult;
+
 public class ReBros {
     private Content content;
 
@@ -10,7 +12,7 @@ public class ReBros {
     }
 
     public Result run(Request request) {
-        Result result = new Result();
+        Result result = emptyResult();
         for (String selectField : request.selectedFields()) {
             List<Match> matches = content.getAllMatches(selectField);
             matches.forEach(match -> result.put(selectField, match));
