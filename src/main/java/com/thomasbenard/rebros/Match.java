@@ -7,8 +7,6 @@ import java.util.Objects;
 
 public class Match {
     @NotNull
-    private final String name;
-    @NotNull
     private final String value;
     @NotNull
     private final Map<String, @NotNull Match> children;
@@ -18,19 +16,16 @@ public class Match {
     }
 
     private Match(String value) {
-        this.name = "";
         this.value = value;
         children = new HashMap<>();
     }
 
     public Match() {
-        this.name = "";
         this.value = "";
         children = new HashMap<>();
     }
 
     private Match(HashMap<String, @NotNull Match> children) {
-        this.name = "";
         this.value = "";
         this.children = children;
     }
@@ -52,8 +47,7 @@ public class Match {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Match match = (Match) o;
-        return Objects.equals(name, match.name) &&
-                Objects.equals(value, match.value) &&
+        return Objects.equals(value, match.value) &&
                 areChildrenEqual(match);
     }
 
@@ -67,14 +61,13 @@ public class Match {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, value, children);
+        return Objects.hash(value, children);
     }
 
     @Override
     public String toString() {
         return "Match{" +
-                "name='" + name + '\'' +
-                ", value=" + value +
+                "value=" + value +
                 ", children=" + children +
                 '}';
     }
