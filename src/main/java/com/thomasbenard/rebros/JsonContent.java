@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.thomasbenard.rebros.Match.branchMatch;
 import static com.thomasbenard.rebros.Match.fieldMatch;
 
 public class JsonContent implements Content {
@@ -29,16 +30,15 @@ public class JsonContent implements Content {
             return List.of(fieldMatch(match));
         if (isJsonObject(match)) {
             JSONObject jsonObject = new JSONObject(match);
-            Match complexMatch = Match.branchMatch();
+            Match complexMatch = branchMatch();
             for (String member : jsonObject.keySet()) {
-                complexMatch = complexMatch.addField(member, jsonObject.get(member).toString());
+                complexMatch = complexMatch.addField(member, buildMatches(jsonObject.get(member).toString()).get(0));
             }
             return List.of(complexMatch);
         } else {
             List<Match> matches = new ArrayList<>();
             JSONArray jsonArray = new JSONArray(match);
             for (int i = 0; i < jsonArray.length(); i++) {
-                //element does not contain key ! => bug ! TODO remove key from Match
                 matches.addAll(buildMatches(jsonArray.get(i).toString()));
             }
             return matches;

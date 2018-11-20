@@ -1,7 +1,6 @@
 package unit_tests;
 
 import com.thomasbenard.rebros.*;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.thomasbenard.rebros.Match.branchMatch;
@@ -59,7 +58,7 @@ public class ReBrosMust {
     }
 
     @Test
-    public void return_all_wanted_matches() {
+    public void return_all_simple_matches() {
         Request request = new Request();
         request.select("something");
 
@@ -88,7 +87,7 @@ public class ReBrosMust {
     }
 
     @Test
-    public void return_all_matching_results() {
+    public void return_all_complex_matches() {
         Request request = new Request();
         request.select("person");
 
@@ -108,27 +107,26 @@ public class ReBrosMust {
         assertThat(result, equalTo(expectedResult));
     }
 
-    @Ignore
     @Test
-    public void return_multiple_complex_objects() {
+    public void return_complex_matches_containing_an_array() {
         Request request = new Request();
         request.select("family");
 
         Result result = reBros(familyIsAnArray).run(request);
 
-        Result expectedResult = emptyResult();
         Match jean = branchMatch()
-                .addField("id", "1")
-                .addField("first_name", "Jean")
-                .addField("last_name", "Bonneau");
+                .addField("person", branchMatch()
+                        .addField("id", "1")
+                        .addField("first_name", "Jean")
+                        .addField("last_name", "Bonneau"));
         Match charles = branchMatch()
-                .addField("id", "2")
-                .addField("first_name", "Charles")
-                .addField("last_name", "Cuttery");
-        Match family = branchMatch()
-                .addField("person", jean)
-                .addField("person", charles);
-        expectedResult.put("family", family);
+                .addField("person", branchMatch()
+                        .addField("id", "2")
+                        .addField("first_name", "Charles")
+                        .addField("last_name", "Cuttery"));
+        Result expectedResult = emptyResult()
+                .put("family", jean)
+                .put("family", charles);
         assertThat(result, equalTo(expectedResult));
     }
 }

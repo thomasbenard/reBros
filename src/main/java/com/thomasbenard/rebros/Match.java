@@ -1,15 +1,13 @@
 package com.thomasbenard.rebros;
 
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Match {
     @NotNull
     private final String value;
     @NotNull
-    private final Map<String, @NotNull Match> children;
+    private final Map<String, List<Match>> children;
 
     static Match fieldMatch(String fieldValue) {
         return new Match(fieldValue);
@@ -29,20 +27,20 @@ public class Match {
         children = new HashMap<>();
     }
 
-    private Match(HashMap<String, @NotNull Match> children) {
+    private Match(HashMap<String, List<Match>> children) {
         this.value = "";
         this.children = children;
     }
 
     public Match addField(String fieldName, String fieldValue) {
-        HashMap<String, Match> newChildren = new HashMap<>(children);
-        newChildren.put(fieldName, fieldMatch(fieldValue));
-        return new Match(newChildren);
+        return addField(fieldName, fieldMatch(fieldValue));
     }
 
     public Match addField(String fieldName, Match fieldValue) {
-        HashMap<String, Match> newChildren = new HashMap<>(children);
-        newChildren.put(fieldName, fieldValue);
+        if (!children.containsKey(fieldName))
+            children.put(fieldName, new ArrayList<>());
+        HashMap<String, List<Match>> newChildren = new HashMap<>(children);
+        newChildren.get(fieldName).add(fieldValue);
         return new Match(newChildren);
     }
 
@@ -70,10 +68,9 @@ public class Match {
 
     @Override
     public String toString() {
-        return "Match{" +
-                "value=" + value +
-                ", children=" + children +
-                '}';
+        if(!value.isEmpty())
+            return value;
+        return children.toString();
     }
 
 }
