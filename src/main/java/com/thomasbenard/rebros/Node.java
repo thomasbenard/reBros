@@ -3,9 +3,7 @@ package com.thomasbenard.rebros;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.thomasbenard.rebros.Match.branchMatch;
 import static com.thomasbenard.rebros.Match.fieldMatch;
@@ -43,10 +41,10 @@ class Node {
         if (isLeaf())
             return List.of(fieldMatch(pattern));
         if (isObject()) {
-            JSONObject jsonObject = new JSONObject(pattern);
             Match complexMatch = branchMatch();
-            for (String member : members()) {
-                Node child = new Node(jsonObject.get(member).toString());
+            Map<String, Node> children = children();
+            for (String member : children.keySet()) {
+                Node child = children.get(member);
                 List<Match> matches = child.buildMatches();
                 complexMatch = complexMatch.addField(member, matches.get(0));
             }
@@ -60,6 +58,15 @@ class Node {
             }
             return matches;
         }
+    }
+
+    private Map<String, Node> children() {
+        JSONObject jsonObject = new JSONObject(pattern);
+        Map<String, Node> children = new HashMap<>();
+        for (String member : members()) {
+            children.put(member, new Node(jsonObject.get(member).toString()));
+        }
+        return children;
     }
 
     private Set<String> members() {
