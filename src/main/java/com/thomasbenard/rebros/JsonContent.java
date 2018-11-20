@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.thomasbenard.rebros.Match.branchMatch;
-import static com.thomasbenard.rebros.Match.fieldMatch;
-
 public class JsonContent implements Content {
     private final JSONObject rootObject;
 
@@ -27,30 +24,7 @@ public class JsonContent implements Content {
 
     private List<Match> buildMatches(String match) {
         Node node = new Node(match);
-        return buildMatches(node);
-    }
-
-    private List<Match> buildMatches(Node node) {
-        if (node.isLeaf())
-            return List.of(fieldMatch(node.pattern()));
-        if (node.isObject()) {
-            JSONObject jsonObject = new JSONObject(node.pattern());
-            Match complexMatch = branchMatch();
-            for (String member : jsonObject.keySet()) {
-                Node child = new Node(jsonObject.get(member).toString());
-                List<Match> matches = buildMatches(child);
-                complexMatch = complexMatch.addField(member, matches.get(0));
-            }
-            return List.of(complexMatch);
-        } else {
-            List<Match> matches = new ArrayList<>();
-            JSONArray jsonArray = new JSONArray(node.pattern());
-            for (int i = 0; i < jsonArray.length(); i++) {
-                Node element = new Node(jsonArray.get(i).toString());
-                matches.addAll(buildMatches(element));
-            }
-            return matches;
-        }
+        return node.buildMatches();
     }
 
     private @NotNull List<String> findObjectMatchingKey(JSONObject jsonObject, String key) {
