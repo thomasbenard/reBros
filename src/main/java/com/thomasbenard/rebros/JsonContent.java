@@ -26,40 +26,30 @@ public class JsonContent implements Content {
     }
 
     private List<Match> buildMatches(String match) {
-        if (!isJsonObject(match) && !isJsonArray(match))
-            return List.of(fieldMatch(match));
-        if (isJsonObject(match)) {
-            JSONObject jsonObject = new JSONObject(match);
+        Node node = new Node(match);
+        return buildMatches(node);
+    }
+
+    private List<Match> buildMatches(Node node) {
+        if (node.isLeaf())
+            return List.of(fieldMatch(node.pattern()));
+        if (node.isObject()) {
+            JSONObject jsonObject = new JSONObject(node.pattern());
             Match complexMatch = branchMatch();
             for (String member : jsonObject.keySet()) {
-                complexMatch = complexMatch.addField(member, buildMatches(jsonObject.get(member).toString()).get(0));
+                Node child = new Node(jsonObject.get(member).toString());
+                List<Match> matches = buildMatches(child);
+                complexMatch = complexMatch.addField(member, matches.get(0));
             }
             return List.of(complexMatch);
         } else {
             List<Match> matches = new ArrayList<>();
-            JSONArray jsonArray = new JSONArray(match);
+            JSONArray jsonArray = new JSONArray(node.pattern());
             for (int i = 0; i < jsonArray.length(); i++) {
-                matches.addAll(buildMatches(jsonArray.get(i).toString()));
+                Node element = new Node(jsonArray.get(i).toString());
+                matches.addAll(buildMatches(element));
             }
             return matches;
-        }
-    }
-
-    private boolean isJsonObject(String match) {
-        try {
-            new JSONObject(match);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private boolean isJsonArray(String match) {
-        try {
-            new JSONArray(match);
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 
