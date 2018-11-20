@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.thomasbenard.rebros.Match.branchMatch;
 import static com.thomasbenard.rebros.Match.fieldMatch;
@@ -16,13 +17,9 @@ class Node {
         this.pattern = pattern;
     }
 
-    private String pattern() {
-        return pattern;
-    }
-
     private boolean isObject() {
         try {
-            new JSONObject(pattern());
+            new JSONObject(pattern);
             return true;
         } catch (Exception e) {
             return false;
@@ -31,7 +28,7 @@ class Node {
 
     private boolean isArray() {
         try {
-            new JSONArray(pattern());
+            new JSONArray(pattern);
             return true;
         } catch (Exception e) {
             return false;
@@ -44,11 +41,11 @@ class Node {
 
     List<Match> buildMatches() {
         if (isLeaf())
-            return List.of(fieldMatch(pattern()));
+            return List.of(fieldMatch(pattern));
         if (isObject()) {
-            JSONObject jsonObject = new JSONObject(pattern());
+            JSONObject jsonObject = new JSONObject(pattern);
             Match complexMatch = branchMatch();
-            for (String member : jsonObject.keySet()) {
+            for (String member : members()) {
                 Node child = new Node(jsonObject.get(member).toString());
                 List<Match> matches = child.buildMatches();
                 complexMatch = complexMatch.addField(member, matches.get(0));
@@ -56,12 +53,16 @@ class Node {
             return List.of(complexMatch);
         } else {
             List<Match> matches = new ArrayList<>();
-            JSONArray jsonArray = new JSONArray(pattern());
+            JSONArray jsonArray = new JSONArray(pattern);
             for (int i = 0; i < jsonArray.length(); i++) {
                 Node element = new Node(jsonArray.get(i).toString());
                 matches.addAll(element.buildMatches());
             }
             return matches;
         }
+    }
+
+    private Set<String> members() {
+        return new JSONObject(pattern).keySet();
     }
 }

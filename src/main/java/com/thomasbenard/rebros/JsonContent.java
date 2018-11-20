@@ -23,8 +23,7 @@ public class JsonContent implements Content {
     }
 
     private List<Match> buildMatches(String match) {
-        Node node = new Node(match);
-        return node.buildMatches();
+        return new Node(match).buildMatches();
     }
 
     private @NotNull List<String> findObjectMatchingKey(JSONObject jsonObject, String key) {
