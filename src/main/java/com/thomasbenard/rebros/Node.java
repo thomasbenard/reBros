@@ -51,13 +51,18 @@ class Node {
             return List.of(complexMatch);
         } else {
             List<Match> matches = new ArrayList<>();
-            JSONArray jsonArray = new JSONArray(pattern);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                Node element = new Node(jsonArray.get(i).toString());
-                matches.addAll(element.buildMatches());
-            }
+            elements().forEach(node -> matches.addAll(node.buildMatches()));
             return matches;
         }
+    }
+
+    private List<Node> elements() {
+        List<Node> elements = new ArrayList<>();
+        JSONArray jsonArray = new JSONArray(pattern);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            elements.add(new Node(jsonArray.get(i).toString()));
+        }
+        return elements;
     }
 
     private Map<String, Node> children() {
