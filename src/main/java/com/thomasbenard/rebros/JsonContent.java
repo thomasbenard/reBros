@@ -13,7 +13,7 @@ public class JsonContent implements Content {
 
     public List<Match> getAllMatches(@NotNull String key) {
         List<Match> matches = new ArrayList<>();
-        List<Node> matchingNodes = rootNode.findNodesMatching(key);
+        List<Node> matchingNodes = rootNode.findChildrenMatching(key);
         matchingNodes.forEach(node -> matches.addAll(node.buildMatches()));
         return matches;
     }

@@ -56,7 +56,7 @@ class Node {
     private Match buildMatchObject() {
         Match complexMatch = branchMatch();
         Map<String, Node> children = children();
-        for (String member : children.keySet()) {
+        for (String member : members()) {
             Node child = children.get(member);
             List<Match> matches = child.buildMatches();
             complexMatch = complexMatch.addField(member, matches.get(0));
@@ -90,16 +90,16 @@ class Node {
         return children().get(member);
     }
 
-    @NotNull List<Node> findNodesMatching(String key) {
-        for (String member : members()) {
-            Node childNode = get(member);
-            if (member.equals(key))
-                return List.of(childNode);
-            if (childNode.isObject())
-                return childNode.findNodesMatching(key);
-            if (childNode.isArray()) {
+    @NotNull List<Node> findChildrenMatching(String key) {
+        for (String childName : members()) {
+            Node child = get(childName);
+            if (childName.equals(key))
+                return List.of(child);
+            if (child.isObject())
+                return child.findChildrenMatching(key);
+            if (child.isArray()) {
                 List<Node> nodes = new ArrayList<>();
-                childNode.elements().forEach(element -> nodes.addAll(element.findNodesMatching(key)));
+                child.elements().forEach(element -> nodes.addAll(element.findChildrenMatching(key)));
                 return nodes;
             }
         }
