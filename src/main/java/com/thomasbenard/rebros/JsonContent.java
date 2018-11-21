@@ -25,13 +25,14 @@ public class JsonContent implements Content {
     private @NotNull List<Node> findObjectMatchingKey(JSONObject jsonObject, String key) {
         Node node = new Node(jsonObject.toString());
         for (String member : node.members()) {
+            Node childNode = node.get(member);
             if (member.equals(key))
-                return List.of(node.get(member));
+                return List.of(childNode);
             JSONObject child = jsonObject.optJSONObject(member);
-            if (child != null)
+            if (childNode.isObject())
                 return findObjectMatchingKey(child, key);
             JSONArray childArray = jsonObject.optJSONArray(member);
-            if (childArray != null) {
+            if (childNode.isArray()) {
                 int numberOfElements = childArray.length();
                 List<Node> nodes = new ArrayList<>();
                 for (int i = 0; i < numberOfElements; i++) {

@@ -15,7 +15,7 @@ class Node {
         this.pattern = pattern;
     }
 
-    private boolean isObject() {
+    boolean isObject() {
         try {
             new JSONObject(pattern);
             return true;
@@ -24,7 +24,7 @@ class Node {
         }
     }
 
-    private boolean isArray() {
+    boolean isArray() {
         try {
             new JSONArray(pattern);
             return true;
