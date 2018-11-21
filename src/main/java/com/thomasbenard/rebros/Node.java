@@ -15,7 +15,7 @@ class Node {
         this.pattern = pattern;
     }
 
-    private boolean isObject() {
+    boolean isObject() {
         try {
             new JSONObject(pattern);
             return true;
@@ -24,7 +24,7 @@ class Node {
         }
     }
 
-    private boolean isArray() {
+    boolean isArray() {
         try {
             new JSONArray(pattern);
             return true;
@@ -33,7 +33,7 @@ class Node {
         }
     }
 
-    private boolean isLeaf() {
+    boolean isLeaf() {
         return !isObject() && !isArray();
     }
 
@@ -63,7 +63,7 @@ class Node {
         return complexMatch;
     }
 
-    private List<Node> elements() {
+    List<Node> elements() {
         List<Node> elements = new ArrayList<>();
         JSONArray jsonArray = new JSONArray(pattern);
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -72,7 +72,7 @@ class Node {
         return elements;
     }
 
-    private Map<String, Node> children() {
+    Map<String, Node> children() {
         JSONObject jsonObject = new JSONObject(pattern);
         Map<String, Node> children = new HashMap<>();
         for (String member : members()) {
@@ -81,7 +81,7 @@ class Node {
         return children;
     }
 
-    private Set<String> members() {
+    Set<String> members() {
         return new JSONObject(pattern).keySet();
     }
 }

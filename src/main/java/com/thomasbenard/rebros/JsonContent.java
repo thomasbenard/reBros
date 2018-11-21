@@ -18,18 +18,15 @@ public class JsonContent implements Content {
     public List<Match> getAllMatches(@NotNull String key) {
         List<Match> matches = new ArrayList<>();
         List<Node> matchingNodes = findObjectMatchingKey(this.rootObject, key);
-        matchingNodes.forEach(node -> matches.addAll(buildMatches(node)));
+        matchingNodes.forEach(node -> matches.addAll(node.buildMatches()));
         return matches;
     }
 
-    private List<Match> buildMatches(Node node) {
-        return node.buildMatches();
-    }
-
     private @NotNull List<Node> findObjectMatchingKey(JSONObject jsonObject, String key) {
-        for (String member : jsonObject.keySet()) {
+        Node node = new Node(jsonObject.toString());
+        for (String member : node.members()) {
             if (member.equals(key))
-                return List.of(new Node(jsonObject.get(key).toString()));
+                return List.of(node.children().get(member));
             JSONObject child = jsonObject.optJSONObject(member);
             if (child != null)
                 return findObjectMatchingKey(child, key);
