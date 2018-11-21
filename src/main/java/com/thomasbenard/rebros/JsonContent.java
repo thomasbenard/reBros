@@ -33,7 +33,7 @@ public class JsonContent implements Content {
                 return findObjectMatchingKey(child, key);
             JSONArray childArray = jsonObject.optJSONArray(member);
             if (childNode.isArray()) {
-                int numberOfElements = childArray.length();
+                int numberOfElements = childNode.elements().size();
                 List<Node> nodes = new ArrayList<>();
                 for (int i = 0; i < numberOfElements; i++) {
                     nodes.addAll(findObjectMatchingKey(childArray.getJSONObject(i), key));

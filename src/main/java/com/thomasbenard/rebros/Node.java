@@ -63,7 +63,7 @@ class Node {
         return complexMatch;
     }
 
-    private List<Node> elements() {
+    List<Node> elements() {
         List<Node> elements = new ArrayList<>();
         JSONArray jsonArray = new JSONArray(pattern);
         for (int i = 0; i < jsonArray.length(); i++) {
