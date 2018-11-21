@@ -26,7 +26,7 @@ public class JsonContent implements Content {
         Node node = new Node(jsonObject.toString());
         for (String member : node.members()) {
             if (member.equals(key))
-                return List.of(node.children().get(member));
+                return List.of(node.get(member));
             JSONObject child = jsonObject.optJSONObject(member);
             if (child != null)
                 return findObjectMatchingKey(child, key);
@@ -42,4 +42,5 @@ public class JsonContent implements Content {
         }
         return Collections.emptyList();
     }
+
 }
