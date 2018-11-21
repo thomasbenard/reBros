@@ -1,22 +1,20 @@
 package com.thomasbenard.rebros;
 
-import org.json.JSONObject;
-
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class JsonContent implements Content {
-    private final JSONObject rootObject;
+    private final Node rootNode;
 
     public JsonContent(@NotNull String inputData) {
-        rootObject = new JSONObject(inputData);
+        rootNode = new Node(inputData);
     }
 
     public List<Match> getAllMatches(@NotNull String key) {
         List<Match> matches = new ArrayList<>();
-        List<Node> matchingNodes = findObjectMatchingKey(new Node(rootObject.toString()), key);
+        List<Node> matchingNodes = findObjectMatchingKey(rootNode, key);
         matchingNodes.forEach(node -> matches.addAll(node.buildMatches()));
         return matches;
     }
@@ -29,7 +27,6 @@ public class JsonContent implements Content {
             if (childNode.isObject())
                 return findObjectMatchingKey(childNode, key);
             if (childNode.isArray()) {
-                int numberOfElements = childNode.elements().size();
                 List<Node> nodes = new ArrayList<>();
                 childNode.elements().forEach(element -> nodes.addAll(findObjectMatchingKey(element, key)));
                 return nodes;
