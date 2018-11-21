@@ -1,6 +1,5 @@
 package com.thomasbenard.rebros;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.validation.constraints.NotNull;
@@ -17,27 +16,22 @@ public class JsonContent implements Content {
 
     public List<Match> getAllMatches(@NotNull String key) {
         List<Match> matches = new ArrayList<>();
-        List<Node> matchingNodes = findObjectMatchingKey(this.rootObject, key);
+        List<Node> matchingNodes = findObjectMatchingKey(new Node(rootObject.toString()), key);
         matchingNodes.forEach(node -> matches.addAll(node.buildMatches()));
         return matches;
     }
 
-    private @NotNull List<Node> findObjectMatchingKey(JSONObject jsonObject, String key) {
-        Node node = new Node(jsonObject.toString());
+    private @NotNull List<Node> findObjectMatchingKey(Node node, String key) {
         for (String member : node.members()) {
             Node childNode = node.get(member);
             if (member.equals(key))
                 return List.of(childNode);
-            JSONObject child = jsonObject.optJSONObject(member);
             if (childNode.isObject())
-                return findObjectMatchingKey(child, key);
-            JSONArray childArray = jsonObject.optJSONArray(member);
+                return findObjectMatchingKey(childNode, key);
             if (childNode.isArray()) {
                 int numberOfElements = childNode.elements().size();
                 List<Node> nodes = new ArrayList<>();
-                for (int i = 0; i < numberOfElements; i++) {
-                    nodes.addAll(findObjectMatchingKey(childArray.getJSONObject(i), key));
-                }
+                childNode.elements().forEach(element -> nodes.addAll(findObjectMatchingKey(element, key)));
                 return nodes;
             }
         }
