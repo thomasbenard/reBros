@@ -3,6 +3,7 @@ package com.thomasbenard.rebros;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 import static com.thomasbenard.rebros.Match.branchMatch;
@@ -15,7 +16,7 @@ class Node {
         this.pattern = pattern;
     }
 
-    boolean isObject() {
+    private boolean isObject() {
         try {
             new JSONObject(pattern);
             return true;
@@ -24,7 +25,7 @@ class Node {
         }
     }
 
-    boolean isArray() {
+    private boolean isArray() {
         try {
             new JSONArray(pattern);
             return true;
@@ -63,7 +64,7 @@ class Node {
         return complexMatch;
     }
 
-    List<Node> elements() {
+    private List<Node> elements() {
         List<Node> elements = new ArrayList<>();
         JSONArray jsonArray = new JSONArray(pattern);
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -81,11 +82,27 @@ class Node {
         return children;
     }
 
-    Set<String> members() {
+    private Set<String> members() {
         return new JSONObject(pattern).keySet();
     }
 
-    Node get(String member) {
+    private Node get(String member) {
         return children().get(member);
+    }
+
+    @NotNull List<Node> findObjectMatchingKey(String key) {
+        for (String member : members()) {
+            Node childNode = get(member);
+            if (member.equals(key))
+                return List.of(childNode);
+            if (childNode.isObject())
+                return childNode.findObjectMatchingKey(key);
+            if (childNode.isArray()) {
+                List<Node> nodes = new ArrayList<>();
+                childNode.elements().forEach(element -> nodes.addAll(element.findObjectMatchingKey(key)));
+                return nodes;
+            }
+        }
+        return Collections.emptyList();
     }
 }
