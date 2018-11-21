@@ -90,16 +90,16 @@ class Node {
         return children().get(member);
     }
 
-    @NotNull List<Node> findObjectMatchingKey(String key) {
+    @NotNull List<Node> findNodesMatching(String key) {
         for (String member : members()) {
             Node childNode = get(member);
             if (member.equals(key))
                 return List.of(childNode);
             if (childNode.isObject())
-                return childNode.findObjectMatchingKey(key);
+                return childNode.findNodesMatching(key);
             if (childNode.isArray()) {
                 List<Node> nodes = new ArrayList<>();
-                childNode.elements().forEach(element -> nodes.addAll(element.findObjectMatchingKey(key)));
+                childNode.elements().forEach(element -> nodes.addAll(element.findNodesMatching(key)));
                 return nodes;
             }
         }
