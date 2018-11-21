@@ -39,21 +39,28 @@ class Node {
 
     List<Match> buildMatches() {
         if (isLeaf())
-            return List.of(fieldMatch(pattern));
+            return List.of(buildLeafObject());
         if (isObject()) {
-            Match complexMatch = branchMatch();
-            Map<String, Node> children = children();
-            for (String member : children.keySet()) {
-                Node child = children.get(member);
-                List<Match> matches = child.buildMatches();
-                complexMatch = complexMatch.addField(member, matches.get(0));
-            }
-            return List.of(complexMatch);
-        } else {
-            List<Match> matches = new ArrayList<>();
-            elements().forEach(node -> matches.addAll(node.buildMatches()));
-            return matches;
+            return List.of(buildMatchObject());
         }
+        List<Match> matches = new ArrayList<>();
+        elements().forEach(node -> matches.addAll(node.buildMatches()));
+        return matches;
+    }
+
+    private Match buildLeafObject() {
+        return fieldMatch(pattern);
+    }
+
+    private Match buildMatchObject() {
+        Match complexMatch = branchMatch();
+        Map<String, Node> children = children();
+        for (String member : children.keySet()) {
+            Node child = children.get(member);
+            List<Match> matches = child.buildMatches();
+            complexMatch = complexMatch.addField(member, matches.get(0));
+        }
+        return complexMatch;
     }
 
     private List<Node> elements() {
