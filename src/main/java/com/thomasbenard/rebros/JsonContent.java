@@ -17,30 +17,30 @@ public class JsonContent implements Content {
 
     public List<Match> getAllMatches(@NotNull String key) {
         List<Match> matches = new ArrayList<>();
-        List<String> rawMatches = findObjectMatchingKey(this.rootObject, key);
-        rawMatches.forEach(match -> matches.addAll(buildMatches(match)));
+        List<Node> matchingNodes = findObjectMatchingKey(this.rootObject, key);
+        matchingNodes.forEach(node -> matches.addAll(buildMatches(node)));
         return matches;
     }
 
-    private List<Match> buildMatches(String match) {
-        return new Node(match).buildMatches();
+    private List<Match> buildMatches(Node node) {
+        return node.buildMatches();
     }
 
-    private @NotNull List<String> findObjectMatchingKey(JSONObject jsonObject, String key) {
+    private @NotNull List<Node> findObjectMatchingKey(JSONObject jsonObject, String key) {
         for (String member : jsonObject.keySet()) {
             if (member.equals(key))
-                return List.of(jsonObject.get(key).toString());
+                return List.of(new Node(jsonObject.get(key).toString()));
             JSONObject child = jsonObject.optJSONObject(member);
             if (child != null)
                 return findObjectMatchingKey(child, key);
             JSONArray childArray = jsonObject.optJSONArray(member);
             if (childArray != null) {
                 int numberOfElements = childArray.length();
-                List<String> matches = new ArrayList<>();
+                List<Node> nodes = new ArrayList<>();
                 for (int i = 0; i < numberOfElements; i++) {
-                    matches.addAll(findObjectMatchingKey(childArray.getJSONObject(i), key));
+                    nodes.addAll(findObjectMatchingKey(childArray.getJSONObject(i), key));
                 }
-                return matches;
+                return nodes;
             }
         }
         return Collections.emptyList();
