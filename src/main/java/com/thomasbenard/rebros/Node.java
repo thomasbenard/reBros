@@ -40,20 +40,20 @@ class Node {
 
     List<Match> buildMatches() {
         if (isLeaf())
-            return List.of(buildLeafObject());
+            return List.of(buildLeafMatch());
         if (isObject()) {
-            return List.of(buildMatchObject());
+            return List.of(buildComplexMatch());
         }
         List<Match> matches = new ArrayList<>();
         elements().forEach(node -> matches.addAll(node.buildMatches()));
         return matches;
     }
 
-    private Match buildLeafObject() {
+    private Match buildLeafMatch() {
         return fieldMatch(pattern);
     }
 
-    private Match buildMatchObject() {
+    private Match buildComplexMatch() {
         Match complexMatch = branchMatch();
         Map<String, Node> children = children();
         for (String member : members()) {
