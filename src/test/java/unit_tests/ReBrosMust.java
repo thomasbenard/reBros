@@ -129,4 +129,21 @@ public class ReBrosMust {
                 .put("family", charles);
         assertThat(result, equalTo(expectedResult));
     }
+
+    @Test
+    public void select_matches_fitting_conditions() {
+        Request request = new Request();
+        request.select("person");
+        request.where("id", "1");
+
+        Result result = reBros(familyIsAnArray).run(request);
+
+        Match jean = branchMatch()
+                .addField("id", "1")
+                .addField("first_name", "Jean")
+                .addField("last_name", "Bonneau");
+        Result expectedResult = emptyResult()
+                .put("person", jean);
+        assertThat(result, equalTo(expectedResult));
+    }
 }
