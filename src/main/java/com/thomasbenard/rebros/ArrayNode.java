@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ArrayNode extends Node {
+public class ArrayNode implements Node {
     @NotNull
     private final List<Node> elements;
 
@@ -18,14 +18,15 @@ public class ArrayNode extends Node {
     }
 
     @Override
-    @NotNull List<Node> findChildrenMatching(String key) {
+    @NotNull
+    public List<Node> findChildrenMatching(String key) {
         List<Node> nodes = new ArrayList<>();
         elements.forEach(match -> nodes.addAll(match.findChildrenMatching(key)));
         return nodes;
     }
 
     @Override
-    protected List<Node> elements() {
+    public List<Node> elements() {
         return elements;
     }
 

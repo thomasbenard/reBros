@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import static java.util.Collections.emptyList;
 
-public class LeafNode extends Node {
+public class LeafNode implements Node {
     @NotNull
     private final String value;
 
@@ -16,8 +16,14 @@ public class LeafNode extends Node {
     }
 
     @Override
-    @NotNull List<Node> findChildrenMatching(String key) {
+    @NotNull
+    public List<Node> findChildrenMatching(String key) {
         return emptyList();
+    }
+
+    @Override
+    public List<Node> elements() {
+        return List.of(this);
     }
 
     @Override

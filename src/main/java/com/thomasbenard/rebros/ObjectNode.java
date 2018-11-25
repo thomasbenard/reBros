@@ -3,7 +3,9 @@ package com.thomasbenard.rebros;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
-public class ObjectNode extends Node {
+import static com.thomasbenard.rebros.Node.leafNode;
+
+public class ObjectNode implements Node {
     @NotNull
     private final Map<String, Node> children;
 
@@ -11,11 +13,18 @@ public class ObjectNode extends Node {
         children = new HashMap<>();
     }
 
-    @NotNull List<Node> findChildrenMatching(String key) {
+    @Override
+    @NotNull
+    public List<Node> findChildrenMatching(String key) {
         List<Node> nodes = new ArrayList<>();
         children.forEach(
                 (member, child) -> nodes.addAll(member.equals(key) ? child.elements() : child.findChildrenMatching(key)));
         return nodes;
+    }
+
+    @Override
+    public List<Node> elements() {
+        return List.of(this);
     }
 
     public ObjectNode addField(String name, String value) {

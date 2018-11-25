@@ -3,13 +3,13 @@ package com.thomasbenard.rebros;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public abstract class Node {
+public interface Node {
 
     static LeafNode leafNode(@NotNull String value) {
         return new LeafNode(value);
     }
 
-    public static ObjectNode objectNode() {
+    static ObjectNode objectNode() {
         return new ObjectNode();
     }
 
@@ -17,10 +17,7 @@ public abstract class Node {
         return new ArrayNode();
     }
 
-    @NotNull
-    abstract List<Node> findChildrenMatching(String key);
+    @NotNull List<Node> findChildrenMatching(String key);
 
-    protected List<Node> elements() {
-        return List.of(this);
-    }
+    List<Node> elements();
 }
