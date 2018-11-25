@@ -4,9 +4,9 @@ import java.util.*;
 
 public class Result {
 
-    private final Map<String, List<Match>> elements;
+    private final Map<String, List<Node>> elements;
 
-    private Result(Map<String, List<Match>> elements) {
+    private Result(Map<String, List<Node>> elements) {
         this.elements = elements;
     }
 
@@ -15,13 +15,13 @@ public class Result {
     }
 
     public Result put(String identifier, String value) {
-        return put(identifier, Match.leafMatch(value));
+        return put(identifier, Node.leafNode(value));
     }
 
-    public Result put(String identifier, Match match) {
+    public Result put(String identifier, Node node) {
         if (!elements.containsKey(identifier))
             elements.put(identifier, new LinkedList<>());
-        elements.get(identifier).add(match);
+        elements.get(identifier).add(node);
         return this;
     }
 

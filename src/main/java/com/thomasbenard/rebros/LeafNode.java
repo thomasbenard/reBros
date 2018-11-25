@@ -6,17 +6,17 @@ import java.util.Objects;
 
 import static java.util.Collections.emptyList;
 
-public class LeafMatch extends Match {
+public class LeafNode extends Node {
     @NotNull
     private final String value;
 
-    LeafMatch(@NotNull String value) {
+    LeafNode(@NotNull String value) {
         super();
         this.value = value;
     }
 
     @Override
-    @NotNull List<Match> findChildrenMatching(String key) {
+    @NotNull List<Node> findChildrenMatching(String key) {
         return emptyList();
     }
 
@@ -29,7 +29,7 @@ public class LeafMatch extends Match {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        LeafMatch leafMatch = (LeafMatch) o;
+        LeafNode leafMatch = (LeafNode) o;
         return Objects.equals(value, leafMatch.value);
     }
 

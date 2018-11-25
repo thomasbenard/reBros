@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import java.util.*;
 
-import static com.thomasbenard.rebros.Match.*;
+import static com.thomasbenard.rebros.Node.*;
 
 public class JsonContent implements Content {
     private final String pattern;
@@ -36,7 +36,7 @@ public class JsonContent implements Content {
         return !isObject() && !isArray();
     }
 
-    public Match buildMatch() {
+    public Node buildMatch() {
         if (isLeaf())
             return buildLeafMatch();
         if (isObject()) {
@@ -45,25 +45,25 @@ public class JsonContent implements Content {
         return buildArrayMatch();
     }
 
-    private Match buildArrayMatch() {
-        ArrayMatch arrayMatch = arrayMatch();
+    private Node buildArrayMatch() {
+        ArrayNode arrayMatch = arrayNode();
         elements().forEach(element -> arrayMatch.addElement(element.buildMatch()));
         return arrayMatch;
     }
 
-    private Match buildComplexMatch() {
-        ObjectMatch objectMatch = objectMatch();
+    private Node buildComplexMatch() {
+        ObjectNode objectMatch = objectNode();
         Map<String, JsonContent> children = children();
         for (String member : members()) {
             JsonContent child = children.get(member);
-            Match matches = child.buildMatch();
+            Node matches = child.buildMatch();
             objectMatch.addField(member, matches);
         }
         return objectMatch;
     }
 
-    private Match buildLeafMatch() {
-        return leafMatch(pattern);
+    private Node buildLeafMatch() {
+        return leafNode(pattern);
     }
 
     private List<JsonContent> elements() {

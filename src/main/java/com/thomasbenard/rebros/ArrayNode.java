@@ -5,27 +5,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ArrayMatch extends Match {
+public class ArrayNode extends Node {
     @NotNull
-    private final List<Match> elements;
+    private final List<Node> elements;
 
-    ArrayMatch() {
+    ArrayNode() {
         elements = new ArrayList<>();
     }
 
-    void addElement(Match element) {
+    void addElement(Node element) {
         elements.add(element);
     }
 
     @Override
-    @NotNull List<Match> findChildrenMatching(String key) {
-        List<Match> matches = new ArrayList<>();
-        elements.forEach(match -> matches.addAll(match.findChildrenMatching(key)));
-        return matches;
+    @NotNull List<Node> findChildrenMatching(String key) {
+        List<Node> nodes = new ArrayList<>();
+        elements.forEach(match -> nodes.addAll(match.findChildrenMatching(key)));
+        return nodes;
     }
 
     @Override
-    protected List<Match> elements() {
+    protected List<Node> elements() {
         return elements;
     }
 
@@ -38,7 +38,7 @@ public class ArrayMatch extends Match {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ArrayMatch that = (ArrayMatch) o;
+        ArrayNode that = (ArrayNode) o;
         return Objects.equals(elements, that.elements);
     }
 

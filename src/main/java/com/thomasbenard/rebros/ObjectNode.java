@@ -3,31 +3,31 @@ package com.thomasbenard.rebros;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
-public class ObjectMatch extends Match {
+public class ObjectNode extends Node {
     @NotNull
-    private final Map<String, Match> children;
+    private final Map<String, Node> children;
 
-    ObjectMatch() {
+    ObjectNode() {
         children = new HashMap<>();
     }
 
-    @NotNull List<Match> findChildrenMatching(String key) {
-        List<Match> matches = new ArrayList<>();
+    @NotNull List<Node> findChildrenMatching(String key) {
+        List<Node> nodes = new ArrayList<>();
         for (String member : children.keySet()) {
-            Match child = children.get(member);
+            Node child = children.get(member);
             if (member.equals(key))
-                matches.addAll(child.elements());
+                nodes.addAll(child.elements());
             else
-                matches.addAll(child.findChildrenMatching(key));
+                nodes.addAll(child.findChildrenMatching(key));
         }
-        return matches;
+        return nodes;
     }
 
-    public ObjectMatch addField(String name, String value) {
-        return addField(name, leafMatch(value));
+    public ObjectNode addField(String name, String value) {
+        return addField(name, leafNode(value));
     }
 
-    public ObjectMatch addField(String name, Match value) {
+    public ObjectNode addField(String name, Node value) {
         children.put(name, value);
         return this;
     }
@@ -41,7 +41,7 @@ public class ObjectMatch extends Match {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ObjectMatch that = (ObjectMatch) o;
+        ObjectNode that = (ObjectNode) o;
         return Objects.equals(children, that.children);
     }
 
