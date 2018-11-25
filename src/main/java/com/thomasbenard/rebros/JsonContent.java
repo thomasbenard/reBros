@@ -1,17 +1,89 @@
 package com.thomasbenard.rebros;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.*;
 
 public class JsonContent implements Content {
-    private final Node rootNode;
+    private final String pattern;
 
-    public JsonContent(@NotNull String inputData) {
-        rootNode = new Node(inputData);
+    public JsonContent(String pattern) {
+        this.pattern = pattern;
     }
 
-    public List<Match> getAllMatches(@NotNull String key) {
-        return rootNode.buildMatch().findChildrenMatching(key);
+    private boolean isObject() {
+        try {
+            new JSONObject(pattern);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean isArray() {
+        try {
+            new JSONArray(pattern);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean isLeaf() {
+        return !isObject() && !isArray();
+    }
+
+    public Match buildMatch() {
+        if (isLeaf())
+            return buildLeafMatch();
+        if (isObject()) {
+            return buildComplexMatch();
+        }
+        return buildArrayMatch();
+    }
+
+    private Match buildArrayMatch() {
+        Match arrayMatch = Match.buildArrayMatch();
+        elements().forEach(element -> arrayMatch.addElement(element.buildMatch()));
+        return arrayMatch;
+    }
+
+    private Match buildComplexMatch() {
+        Match objectMatch = Match.buildObjectMatch();
+        Map<String, JsonContent> children = children();
+        for (String member : members()) {
+            JsonContent child = children.get(member);
+            Match matches = child.buildMatch();
+            objectMatch.addChild(member, matches);
+        }
+        return objectMatch;
+    }
+
+    private Match buildLeafMatch() {
+        return Match.buildLeaf(pattern);
+    }
+
+    private List<JsonContent> elements() {
+        List<JsonContent> elements = new ArrayList<>();
+        JSONArray jsonArray = new JSONArray(pattern);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            elements.add(new JsonContent(jsonArray.get(i).toString()));
+        }
+        return elements;
+    }
+
+    private Map<String, JsonContent> children() {
+        JSONObject jsonObject = new JSONObject(pattern);
+        Map<String, JsonContent> children = new HashMap<>();
+        for (String member : members()) {
+            children.put(member, new JsonContent(jsonObject.get(member).toString()));
+        }
+        return children;
+    }
+
+    private Set<String> members() {
+        return new JSONObject(pattern).keySet();
     }
 
 }

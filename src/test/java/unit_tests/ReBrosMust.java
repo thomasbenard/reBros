@@ -8,11 +8,6 @@ import static com.thomasbenard.rebros.Result.emptyResult;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-//TODO
-//Clean JsonContent
-//Mutability Result
-//Key in both Result and Match
-
 public class ReBrosMust {
 
     private final String complexInputData = "{family: {person: {id: 1, first_name: Jean, last_name: Bonneau}}}";

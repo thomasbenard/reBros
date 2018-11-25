@@ -14,7 +14,7 @@ public class ReBros {
     public Result run(Request request) {
         Result result = emptyResult();
         for (String selectField : request.selectedFields()) {
-            List<Match> matches = content.getAllMatches(selectField);
+            List<Match> matches = content.buildMatch().findChildrenMatching(selectField);
             if (request.isWhereCalled())
                 matches.remove(matches.size() - 1);
             matches.forEach(match -> result.put(selectField, match));
