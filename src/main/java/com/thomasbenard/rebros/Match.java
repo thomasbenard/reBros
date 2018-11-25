@@ -5,26 +5,22 @@ import java.util.*;
 
 public class Match {
     @NotNull
-    private final String value;
-    @NotNull
     private final Map<String, Match> children;
     @NotNull
     private final List<Match> elements;
 
     private Match(@NotNull String value) {
-        this.value = value;
         children = new HashMap<>();
         elements = new ArrayList<>();
     }
 
-    private Match() {
-        value = "";
+    Match() {
         children = new HashMap<>();
         elements = new ArrayList<>();
     }
 
     static Match leafMatch(@NotNull String value) {
-        return new Match(value);
+        return new LeafMatch(value);
     }
 
     public static Match objectMatch() {
@@ -53,7 +49,7 @@ public class Match {
                         matches.addAll(child.elements);
                     else
                         matches.add(child);
-                } else
+                } else if (child.isObject() || child.isArray())
                     matches.addAll(child.findChildrenMatching(key));
             }
         }
@@ -77,8 +73,6 @@ public class Match {
 
     @Override
     public String toString() {
-        if (!"".equals(value))
-            return value;
         if (!children.isEmpty())
             return children.toString();
         return elements.toString();
@@ -94,13 +88,12 @@ public class Match {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Match match = (Match) o;
-        return Objects.equals(value, match.value) &&
-                Objects.equals(children, match.children) &&
+        return Objects.equals(children, match.children) &&
                 Objects.equals(elements, match.elements);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value, children, elements);
+        return Objects.hash(children, elements);
     }
 }
