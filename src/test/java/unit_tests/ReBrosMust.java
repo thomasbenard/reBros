@@ -20,6 +20,20 @@ public class ReBrosMust {
         return new ReBros(content);
     }
 
+    private Node jean() {
+        return objectNode()
+                .addField("id", "1")
+                .addField("first_name", "Jean")
+                .addField("last_name", "Bonneau");
+    }
+
+    private ObjectNode charles() {
+        return objectNode()
+                .addField("id", "2")
+                .addField("first_name", "Charles")
+                .addField("last_name", "Cuttery");
+    }
+
     @Test
     public void return_empty_result_given_empty_request() {
         Request emptyRequest = new Request();
@@ -72,12 +86,8 @@ public class ReBrosMust {
 
         Matches matches = reBros(complexInputData).run(request);
 
-        Node complexNode = objectNode()
-                .addField("id", "1")
-                .addField("first_name", "Jean")
-                .addField("last_name", "Bonneau");
         Matches expectedMatches = emptyResult()
-                .put("person", complexNode);
+                .put("person", jean());
         assertThat(matches, equalTo(expectedMatches));
     }
 
@@ -88,17 +98,9 @@ public class ReBrosMust {
 
         Matches matches = reBros(familyIsAnArray).run(request);
 
-        Node jean = objectNode()
-                .addField("id", "1")
-                .addField("first_name", "Jean")
-                .addField("last_name", "Bonneau");
-        Node charles = objectNode()
-                .addField("id", "2")
-                .addField("first_name", "Charles")
-                .addField("last_name", "Cuttery");
         Matches expectedMatches = emptyResult()
-                .put("person", jean)
-                .put("person", charles);
+                .put("person", jean())
+                .put("person", charles());
         assertThat(matches, equalTo(expectedMatches));
     }
 
@@ -109,19 +111,9 @@ public class ReBrosMust {
 
         Matches matches = reBros(familyIsAnArray).run(request);
 
-        Node jean = objectNode()
-                .addField("person", objectNode()
-                        .addField("id", "1")
-                        .addField("first_name", "Jean")
-                        .addField("last_name", "Bonneau"));
-        Node charles = objectNode()
-                .addField("person", objectNode()
-                        .addField("id", "2")
-                        .addField("first_name", "Charles")
-                        .addField("last_name", "Cuttery"));
         Matches expectedMatches = emptyResult()
-                .put("family", jean)
-                .put("family", charles);
+                .put("family", objectNode().addField("person", jean()))
+                .put("family", objectNode().addField("person", charles()));
         assertThat(matches, equalTo(expectedMatches));
     }
 
@@ -133,12 +125,8 @@ public class ReBrosMust {
 
         Matches matches = reBros(familyIsAnArray).run(request);
 
-        Node jean = objectNode()
-                .addField("id", "1")
-                .addField("first_name", "Jean")
-                .addField("last_name", "Bonneau");
         Matches expectedMatches = emptyResult()
-                .put("person", jean);
+                .put("person", jean());
         assertThat(matches, equalTo(expectedMatches));
     }
 }
