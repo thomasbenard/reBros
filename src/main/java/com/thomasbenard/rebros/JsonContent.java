@@ -1,7 +1,6 @@
 package com.thomasbenard.rebros;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
 public class JsonContent implements Content {
@@ -12,10 +11,7 @@ public class JsonContent implements Content {
     }
 
     public List<Match> getAllMatches(@NotNull String key) {
-        List<Match> matches = new ArrayList<>();
-        List<Node> matchingNodes = rootNode.findChildrenMatching(key);
-        matchingNodes.forEach(node -> matches.addAll(node.buildMatches()));
-        return matches;
+        return rootNode.buildMatch().findChildrenMatching(key);
     }
 
 }

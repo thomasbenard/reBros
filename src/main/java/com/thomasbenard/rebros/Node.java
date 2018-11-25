@@ -3,11 +3,7 @@ package com.thomasbenard.rebros;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.validation.constraints.NotNull;
 import java.util.*;
-
-import static com.thomasbenard.rebros.Match.branchMatch;
-import static com.thomasbenard.rebros.Match.fieldMatch;
 
 class Node {
     private final String pattern;
@@ -38,30 +34,34 @@ class Node {
         return !isObject() && !isArray();
     }
 
-    List<Match> buildMatches() {
+    Match buildMatch() {
         if (isLeaf())
-            return List.of(buildLeafMatch());
+            return buildLeafMatch();
         if (isObject()) {
-            return List.of(buildComplexMatch());
+            return buildComplexMatch();
         }
-        List<Match> matches = new ArrayList<>();
-        elements().forEach(node -> matches.addAll(node.buildMatches()));
-        return matches;
+        return buildArrayMatch();
     }
 
-    private Match buildLeafMatch() {
-        return fieldMatch(pattern);
+    private Match buildArrayMatch() {
+        Match arrayMatch = Match.buildArrayMatch();
+        elements().forEach(element -> arrayMatch.addElement(element.buildMatch()));
+        return arrayMatch;
     }
 
     private Match buildComplexMatch() {
-        Match complexMatch = branchMatch();
+        Match objectMatch = Match.buildObjectMatch();
         Map<String, Node> children = children();
         for (String member : members()) {
             Node child = children.get(member);
-            List<Match> matches = child.buildMatches();
-            complexMatch = complexMatch.addField(member, matches.get(0));
+            Match matches = child.buildMatch();
+            objectMatch.addChild(member, matches);
         }
-        return complexMatch;
+        return objectMatch;
+    }
+
+    private Match buildLeafMatch() {
+        return Match.buildLeaf(pattern);
     }
 
     private List<Node> elements() {
@@ -86,23 +86,4 @@ class Node {
         return new JSONObject(pattern).keySet();
     }
 
-    private Node get(String member) {
-        return children().get(member);
-    }
-
-    @NotNull List<Node> findChildrenMatching(String key) {
-        for (String childName : members()) {
-            Node child = get(childName);
-            if (childName.equals(key))
-                return List.of(child);
-            if (child.isObject())
-                return child.findChildrenMatching(key);
-            if (child.isArray()) {
-                List<Node> nodes = new ArrayList<>();
-                child.elements().forEach(element -> nodes.addAll(element.findChildrenMatching(key)));
-                return nodes;
-            }
-        }
-        return Collections.emptyList();
-    }
 }

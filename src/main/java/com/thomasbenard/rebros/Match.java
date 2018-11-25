@@ -7,41 +7,86 @@ public class Match {
     @NotNull
     private final String value;
     @NotNull
-    private final Map<String, List<Match>> children;
+    private final Map<String, Match> children;
+    @NotNull
+    private final List<Match> elements;
 
-    static Match fieldMatch(String fieldValue) {
-        return new Match(fieldValue);
-    }
-
-    public static Match branchMatch() {
-        return new Match();
-    }
-
-    private Match(String value) {
+    private Match(@NotNull String value) {
         this.value = value;
         children = new HashMap<>();
+        elements = new ArrayList<>();
     }
 
     private Match() {
-        this.value = "";
+        value = "";
         children = new HashMap<>();
+        elements = new ArrayList<>();
     }
 
-    private Match(HashMap<String, List<Match>> children) {
-        this.value = "";
-        this.children = children;
+    static Match buildLeaf(@NotNull String value) {
+        return new Match(value);
     }
 
-    public Match addField(String fieldName, String fieldValue) {
-        return addField(fieldName, fieldMatch(fieldValue));
+    public static Match buildObjectMatch() {
+        return new Match();
     }
 
-    public Match addField(String fieldName, Match fieldValue) {
-        if (!children.containsKey(fieldName))
-            children.put(fieldName, new ArrayList<>());
-        HashMap<String, List<Match>> newChildren = new HashMap<>(children);
-        newChildren.get(fieldName).add(fieldValue);
-        return new Match(newChildren);
+    static Match buildArrayMatch() {
+        return new Match();
+    }
+
+    private boolean isObject() {
+        return !children.isEmpty();
+    }
+
+    private boolean isArray() {
+        return !elements.isEmpty();
+    }
+
+    @NotNull List<Match> findChildrenMatching(String key) {
+        List<Match> matches = new ArrayList<>();
+        if (isObject()) {
+            for (String member : children.keySet()) {
+                Match child = children.get(member);
+                if (member.equals(key)) {
+                    if (child.isArray())
+                        matches.addAll(child.elements);
+                    else
+                        matches.add(child);
+                } else
+                    matches.addAll(child.findChildrenMatching(key));
+            }
+        }
+        if (isArray()) {
+            elements.forEach(element -> matches.addAll(element.findChildrenMatching(key)));
+        }
+        return matches;
+    }
+
+    void addChild(String memberName, Match match) {
+        children.put(memberName, match);
+    }
+
+    void addElement(Match element) {
+        elements.add(element);
+    }
+
+    public Match addField(String name, String value) {
+        return addField(name, buildLeaf(value));
+    }
+
+    @Override
+    public String toString() {
+        if (!"".equals(value))
+            return value;
+        if (!children.isEmpty())
+            return children.toString();
+        return elements.toString();
+    }
+
+    public Match addField(String name, Match value) {
+        addChild(name, value);
+        return this;
     }
 
     @Override
@@ -50,27 +95,12 @@ public class Match {
         if (o == null || getClass() != o.getClass()) return false;
         Match match = (Match) o;
         return Objects.equals(value, match.value) &&
-                areChildrenEqual(match);
-    }
-
-    private boolean areChildrenEqual(Match match) {
-        boolean areChildrenEqual = children.size() == match.children.size();
-        for (String field : children.keySet()) {
-            areChildrenEqual &= children.get(field).equals(match.children.get(field));
-        }
-        return areChildrenEqual;
+                Objects.equals(children, match.children) &&
+                Objects.equals(elements, match.elements);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value, children);
+        return Objects.hash(value, children, elements);
     }
-
-    @Override
-    public String toString() {
-        if(!value.isEmpty())
-            return value;
-        return children.toString();
-    }
-
 }

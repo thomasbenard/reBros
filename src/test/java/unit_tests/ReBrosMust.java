@@ -3,7 +3,7 @@ package unit_tests;
 import com.thomasbenard.rebros.*;
 import org.junit.Test;
 
-import static com.thomasbenard.rebros.Match.branchMatch;
+import static com.thomasbenard.rebros.Match.buildObjectMatch;
 import static com.thomasbenard.rebros.Result.emptyResult;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -77,7 +77,7 @@ public class ReBrosMust {
 
         Result result = reBros(complexInputData).run(request);
 
-        Match complexMatch = branchMatch()
+        Match complexMatch = buildObjectMatch()
                 .addField("id", "1")
                 .addField("first_name", "Jean")
                 .addField("last_name", "Bonneau");
@@ -93,11 +93,11 @@ public class ReBrosMust {
 
         Result result = reBros(familyIsAnArray).run(request);
 
-        Match jean = branchMatch()
+        Match jean = buildObjectMatch()
                 .addField("id", "1")
                 .addField("first_name", "Jean")
                 .addField("last_name", "Bonneau");
-        Match charles = branchMatch()
+        Match charles = buildObjectMatch()
                 .addField("id", "2")
                 .addField("first_name", "Charles")
                 .addField("last_name", "Cuttery");
@@ -114,13 +114,13 @@ public class ReBrosMust {
 
         Result result = reBros(familyIsAnArray).run(request);
 
-        Match jean = branchMatch()
-                .addField("person", branchMatch()
+        Match jean = buildObjectMatch()
+                .addField("person", buildObjectMatch()
                         .addField("id", "1")
                         .addField("first_name", "Jean")
                         .addField("last_name", "Bonneau"));
-        Match charles = branchMatch()
-                .addField("person", branchMatch()
+        Match charles = buildObjectMatch()
+                .addField("person", buildObjectMatch()
                         .addField("id", "2")
                         .addField("first_name", "Charles")
                         .addField("last_name", "Cuttery"));
@@ -138,7 +138,7 @@ public class ReBrosMust {
 
         Result result = reBros(familyIsAnArray).run(request);
 
-        Match jean = branchMatch()
+        Match jean = buildObjectMatch()
                 .addField("id", "1")
                 .addField("first_name", "Jean")
                 .addField("last_name", "Bonneau");
