@@ -4,6 +4,8 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 
+import static java.util.Collections.emptyList;
+
 public class LeafMatch extends Match {
     @NotNull
     private final String value;
@@ -15,7 +17,7 @@ public class LeafMatch extends Match {
 
     @Override
     @NotNull List<Match> findChildrenMatching(String key) {
-        return List.of(this);
+        return emptyList();
     }
 
     @Override

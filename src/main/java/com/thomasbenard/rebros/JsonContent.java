@@ -46,7 +46,7 @@ public class JsonContent implements Content {
     }
 
     private Match buildArrayMatch() {
-        Match arrayMatch = arrayMatch();
+        ArrayMatch arrayMatch = arrayMatch();
         elements().forEach(element -> arrayMatch.addElement(element.buildMatch()));
         return arrayMatch;
     }
