@@ -13,13 +13,8 @@ public class ObjectNode extends Node {
 
     @NotNull List<Node> findChildrenMatching(String key) {
         List<Node> nodes = new ArrayList<>();
-        for (String member : children.keySet()) {
-            Node child = children.get(member);
-            if (member.equals(key))
-                nodes.addAll(child.elements());
-            else
-                nodes.addAll(child.findChildrenMatching(key));
-        }
+        children.forEach(
+                (member, child) -> nodes.addAll(member.equals(key) ? child.elements() : child.findChildrenMatching(key)));
         return nodes;
     }
 
