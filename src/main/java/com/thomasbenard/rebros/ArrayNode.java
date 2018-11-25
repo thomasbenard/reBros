@@ -31,6 +31,11 @@ public class ArrayNode implements Node {
     }
 
     @Override
+    public boolean contains(Node node) {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return elements.toString();
     }

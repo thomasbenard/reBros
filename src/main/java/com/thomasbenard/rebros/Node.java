@@ -20,4 +20,6 @@ public interface Node {
     @NotNull List<Node> findChildrenMatching(String key);
 
     List<Node> elements();
+
+    boolean contains(Node node);
 }

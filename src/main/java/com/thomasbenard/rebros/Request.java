@@ -14,11 +14,12 @@ public class Request {
         return selectedFields;
     }
 
+    Map<String, String> whereClauses() {
+        return whereClauses;
+    }
+
     public void where(String memberName, String value) {
         whereClauses.put(memberName, value);
     }
 
-    boolean isWhereCalled() {
-        return !whereClauses.isEmpty();
-    }
 }

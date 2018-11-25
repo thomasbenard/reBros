@@ -27,6 +27,11 @@ public class ObjectNode implements Node {
         return List.of(this);
     }
 
+    @Override
+    public boolean contains(Node node) {
+        return children.values().contains(node);
+    }
+
     public ObjectNode addField(String name, String value) {
         return addField(name, leafNode(value));
     }

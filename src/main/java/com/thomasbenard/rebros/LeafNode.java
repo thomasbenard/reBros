@@ -27,6 +27,11 @@ public class LeafNode implements Node {
     }
 
     @Override
+    public boolean contains(Node node) {
+        return this.equals(node);
+    }
+
+    @Override
     public String toString() {
         return value;
     }
