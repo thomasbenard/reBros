@@ -2,7 +2,7 @@ package com.thomasbenard.rebros;
 
 import java.util.List;
 
-import static com.thomasbenard.rebros.Result.emptyResult;
+import static com.thomasbenard.rebros.Matches.emptyResult;
 
 public class ReBros {
     private Content content;
@@ -11,8 +11,8 @@ public class ReBros {
         this.content = content;
     }
 
-    public Result run(Request request) {
-        Result result = emptyResult();
+    public Matches run(Request request) {
+        Matches result = emptyResult();
         for (String selectField : request.selectedFields()) {
             List<Node> matches = content.buildMatch().findChildrenMatching(selectField);
             if (request.isWhereCalled())

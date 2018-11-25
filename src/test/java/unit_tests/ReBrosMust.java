@@ -3,8 +3,8 @@ package unit_tests;
 import com.thomasbenard.rebros.*;
 import org.junit.Test;
 
+import static com.thomasbenard.rebros.Matches.emptyResult;
 import static com.thomasbenard.rebros.Node.objectNode;
-import static com.thomasbenard.rebros.Result.emptyResult;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -24,9 +24,9 @@ public class ReBrosMust {
     public void return_empty_result_given_empty_request() {
         Request emptyRequest = new Request();
 
-        Result result = reBros("{id: 1, first_name: Jean, last_name: Bonneau}").run(emptyRequest);
+        Matches matches = reBros("{id: 1, first_name: Jean, last_name: Bonneau}").run(emptyRequest);
 
-        assertThat(result, equalTo(emptyResult()));
+        assertThat(matches, equalTo(emptyResult()));
     }
 
     @Test
@@ -34,9 +34,9 @@ public class ReBrosMust {
         Request request = new Request();
         request.select("non_existent_field");
 
-        Result result = reBros(complexInputData).run(request);
+        Matches matches = reBros(complexInputData).run(request);
 
-        assertThat(result, equalTo(emptyResult()));
+        assertThat(matches, equalTo(emptyResult()));
     }
 
     @Test
@@ -44,12 +44,12 @@ public class ReBrosMust {
         Request request = new Request();
         request.select("id", "last_name");
 
-        Result result = reBros(complexInputData).run(request);
+        Matches matches = reBros(complexInputData).run(request);
 
-        Result expectedResult = emptyResult()
+        Matches expectedMatches = emptyResult()
                 .put("id", "1")
                 .put("last_name", "Bonneau");
-        assertThat(result, equalTo(expectedResult));
+        assertThat(matches, equalTo(expectedMatches));
     }
 
     @Test
@@ -57,12 +57,12 @@ public class ReBrosMust {
         Request request = new Request();
         request.select("something");
 
-        Result result = reBros("{something: [1, 2]}").run(request);
+        Matches matches = reBros("{something: [1, 2]}").run(request);
 
-        Result expectedResult = emptyResult()
+        Matches expectedMatches = emptyResult()
                 .put("something", "1")
                 .put("something", "2");
-        assertThat(result, equalTo(expectedResult));
+        assertThat(matches, equalTo(expectedMatches));
     }
 
     @Test
@@ -70,15 +70,15 @@ public class ReBrosMust {
         Request request = new Request();
         request.select("person");
 
-        Result result = reBros(complexInputData).run(request);
+        Matches matches = reBros(complexInputData).run(request);
 
         Node complexNode = objectNode()
                 .addField("id", "1")
                 .addField("first_name", "Jean")
                 .addField("last_name", "Bonneau");
-        Result expectedResult = emptyResult()
+        Matches expectedMatches = emptyResult()
                 .put("person", complexNode);
-        assertThat(result, equalTo(expectedResult));
+        assertThat(matches, equalTo(expectedMatches));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class ReBrosMust {
         Request request = new Request();
         request.select("person");
 
-        Result result = reBros(familyIsAnArray).run(request);
+        Matches matches = reBros(familyIsAnArray).run(request);
 
         Node jean = objectNode()
                 .addField("id", "1")
@@ -96,10 +96,10 @@ public class ReBrosMust {
                 .addField("id", "2")
                 .addField("first_name", "Charles")
                 .addField("last_name", "Cuttery");
-        Result expectedResult = emptyResult()
+        Matches expectedMatches = emptyResult()
                 .put("person", jean)
                 .put("person", charles);
-        assertThat(result, equalTo(expectedResult));
+        assertThat(matches, equalTo(expectedMatches));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class ReBrosMust {
         Request request = new Request();
         request.select("family");
 
-        Result result = reBros(familyIsAnArray).run(request);
+        Matches matches = reBros(familyIsAnArray).run(request);
 
         Node jean = objectNode()
                 .addField("person", objectNode()
@@ -119,10 +119,10 @@ public class ReBrosMust {
                         .addField("id", "2")
                         .addField("first_name", "Charles")
                         .addField("last_name", "Cuttery"));
-        Result expectedResult = emptyResult()
+        Matches expectedMatches = emptyResult()
                 .put("family", jean)
                 .put("family", charles);
-        assertThat(result, equalTo(expectedResult));
+        assertThat(matches, equalTo(expectedMatches));
     }
 
     @Test
@@ -131,14 +131,14 @@ public class ReBrosMust {
         request.select("person");
         request.where("id", "1");
 
-        Result result = reBros(familyIsAnArray).run(request);
+        Matches matches = reBros(familyIsAnArray).run(request);
 
         Node jean = objectNode()
                 .addField("id", "1")
                 .addField("first_name", "Jean")
                 .addField("last_name", "Bonneau");
-        Result expectedResult = emptyResult()
+        Matches expectedMatches = emptyResult()
                 .put("person", jean);
-        assertThat(result, equalTo(expectedResult));
+        assertThat(matches, equalTo(expectedMatches));
     }
 }
