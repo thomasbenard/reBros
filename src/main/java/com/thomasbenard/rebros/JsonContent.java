@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 import java.util.*;
 
+import static com.thomasbenard.rebros.Match.*;
+
 public class JsonContent implements Content {
     private final String pattern;
 
@@ -44,13 +46,13 @@ public class JsonContent implements Content {
     }
 
     private Match buildArrayMatch() {
-        Match arrayMatch = Match.buildArrayMatch();
+        Match arrayMatch = arrayMatch();
         elements().forEach(element -> arrayMatch.addElement(element.buildMatch()));
         return arrayMatch;
     }
 
     private Match buildComplexMatch() {
-        Match objectMatch = Match.buildObjectMatch();
+        Match objectMatch = objectMatch();
         Map<String, JsonContent> children = children();
         for (String member : members()) {
             JsonContent child = children.get(member);
@@ -61,7 +63,7 @@ public class JsonContent implements Content {
     }
 
     private Match buildLeafMatch() {
-        return Match.buildLeaf(pattern);
+        return leafMatch(pattern);
     }
 
     private List<JsonContent> elements() {

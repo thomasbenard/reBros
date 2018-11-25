@@ -15,7 +15,7 @@ public class Result {
     }
 
     public Result put(String identifier, String value) {
-        return put(identifier, Match.buildLeaf(value));
+        return put(identifier, Match.leafMatch(value));
     }
 
     public Result put(String identifier, Match match) {

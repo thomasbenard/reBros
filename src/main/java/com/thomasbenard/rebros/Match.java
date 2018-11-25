@@ -23,15 +23,15 @@ public class Match {
         elements = new ArrayList<>();
     }
 
-    static Match buildLeaf(@NotNull String value) {
+    static Match leafMatch(@NotNull String value) {
         return new Match(value);
     }
 
-    public static Match buildObjectMatch() {
+    public static Match objectMatch() {
         return new Match();
     }
 
-    static Match buildArrayMatch() {
+    static Match arrayMatch() {
         return new Match();
     }
 
@@ -72,7 +72,7 @@ public class Match {
     }
 
     public Match addField(String name, String value) {
-        return addField(name, buildLeaf(value));
+        return addField(name, leafMatch(value));
     }
 
     @Override
