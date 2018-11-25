@@ -52,12 +52,12 @@ public class JsonContent implements Content {
     }
 
     private Match buildComplexMatch() {
-        Match objectMatch = objectMatch();
+        ObjectMatch objectMatch = objectMatch();
         Map<String, JsonContent> children = children();
         for (String member : members()) {
             JsonContent child = children.get(member);
             Match matches = child.buildMatch();
-            objectMatch.addChild(member, matches);
+            objectMatch.addField(member, matches);
         }
         return objectMatch;
     }

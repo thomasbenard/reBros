@@ -29,13 +29,12 @@ public class LeafMatch extends Match {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
         LeafMatch leafMatch = (LeafMatch) o;
         return Objects.equals(value, leafMatch.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), value);
+        return Objects.hash(value);
     }
 }

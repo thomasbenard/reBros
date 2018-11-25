@@ -3,6 +3,7 @@ package com.thomasbenard.rebros;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ArrayMatch extends Match {
     @NotNull
@@ -31,5 +32,18 @@ public class ArrayMatch extends Match {
     @Override
     public String toString() {
         return elements.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ArrayMatch that = (ArrayMatch) o;
+        return Objects.equals(elements, that.elements);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(elements);
     }
 }
