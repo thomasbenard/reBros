@@ -137,4 +137,15 @@ public class ReBrosMust {
                 new Object[]{"first_name", "Charles", charles()}
         };
     }
+
+    @Test
+    public void filter_matches_not_fitting_all_where_clauses() {
+        Request request = new Request();
+        request.select("person");
+        request.where("first_name", "2");
+
+        Matches matches = reBros(familyIsAnArrayOfPersons).run(request);
+
+        assertThat(matches, equalTo(emptyResult()));
+    }
 }
