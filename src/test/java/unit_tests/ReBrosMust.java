@@ -148,4 +148,17 @@ public class ReBrosMust {
 
         assertThat(matches, equalTo(emptyResult()));
     }
+
+    @Test
+    public void filter_matches_not_fitting_where_clases_in_arrays() {
+        Request request = new Request()
+                .select("id")
+                .where("id", "1");
+
+        Matches matches = reBros("{id: [1, 2]}").run(request);
+
+        Matches expectedMatches = emptyResult()
+                .put("id", "1");
+        assertThat(matches, equalTo(expectedMatches));
+    }
 }
