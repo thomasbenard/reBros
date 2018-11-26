@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import static java.util.Collections.emptyList;
 
-public class LeafNode implements Node {
+public class LeafNode extends Node {
     @NotNull
     private final String value;
 
@@ -24,11 +24,6 @@ public class LeafNode implements Node {
     @Override
     public List<Node> elements() {
         return List.of(this);
-    }
-
-    @Override
-    public boolean contains(Node node) {
-        return this.equals(node);
     }
 
     @Override

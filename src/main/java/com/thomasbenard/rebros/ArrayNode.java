@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ArrayNode implements Node {
+public class ArrayNode extends Node {
     @NotNull
     private final List<Node> elements;
 
@@ -28,11 +28,6 @@ public class ArrayNode implements Node {
     @Override
     public List<Node> elements() {
         return elements;
-    }
-
-    @Override
-    public boolean contains(Node node) {
-        return false;
     }
 
     @Override

@@ -34,9 +34,8 @@ public class Request {
     private List<Node> filterWhereClauses(List<Node> selectedFields) {
         Stream<Node> stream = selectedFields.stream();
         for (String parameterName : whereClauses.keySet()) {
-            Node whereClauseValue = whereClauses.get(parameterName);
-            stream = stream.filter(node -> node.equals(whereClauseValue)
-                    || node.findChildrenMatching(parameterName).contains(whereClauseValue));
+            Node value = whereClauses.get(parameterName);
+            stream = stream.filter(node -> node.contains(parameterName, value));
         }
         return stream.collect(Collectors.toList());
     }

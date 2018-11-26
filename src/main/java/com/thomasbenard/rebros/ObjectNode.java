@@ -3,9 +3,7 @@ package com.thomasbenard.rebros;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
-import static com.thomasbenard.rebros.Node.leafNode;
-
-public class ObjectNode implements Node {
+public class ObjectNode extends Node {
     @NotNull
     private final Map<String, Node> children;
 
@@ -25,11 +23,6 @@ public class ObjectNode implements Node {
     @Override
     public List<Node> elements() {
         return List.of(this);
-    }
-
-    @Override
-    public boolean contains(Node node) {
-        return children.values().contains(node);
     }
 
     public ObjectNode addField(String name, String value) {

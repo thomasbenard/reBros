@@ -3,13 +3,13 @@ package com.thomasbenard.rebros;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-public interface Node {
+public abstract class Node {
 
     static LeafNode leafNode(@NotNull String value) {
         return new LeafNode(value);
     }
 
-    static ObjectNode objectNode() {
+    public static ObjectNode objectNode() {
         return new ObjectNode();
     }
 
@@ -17,9 +17,12 @@ public interface Node {
         return new ArrayNode();
     }
 
-    @NotNull List<Node> findChildrenMatching(String key);
+    @NotNull
+    abstract List<Node> findChildrenMatching(String key);
 
-    List<Node> elements();
+    abstract List<Node> elements();
 
-    boolean contains(Node node);
+    boolean contains(String parameterName, Node node) {
+        return equals(node) || findChildrenMatching(parameterName).contains(node);
+    }
 }
