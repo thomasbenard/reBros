@@ -49,8 +49,8 @@ public class ReBrosMust {
 
     @Test
     public void return_empty_result_when_no_fields_match_selected_in_request() {
-        Request request = new Request();
-        request.select("non_existent_field");
+        Request request = new Request()
+                .select("non_existent_field");
 
         Matches matches = reBros(familyIsOnePerson).run(request);
 
@@ -59,8 +59,8 @@ public class ReBrosMust {
 
     @Test
     public void return_the_wanted_fields_when_selecting() {
-        Request request = new Request();
-        request.select("id", "last_name");
+        Request request = new Request()
+                .select("id", "last_name");
 
         Matches matches = reBros(familyIsOnePerson).run(request);
 
@@ -72,8 +72,8 @@ public class ReBrosMust {
 
     @Test
     public void return_all_simple_matches() {
-        Request request = new Request();
-        request.select("something");
+        Request request = new Request()
+                .select("something");
 
         Matches matches = reBros("{something: [1, 2]}").run(request);
 
@@ -85,8 +85,8 @@ public class ReBrosMust {
 
     @Test
     public void return_complex_types() {
-        Request request = new Request();
-        request.select("person");
+        Request request = new Request()
+                .select("person");
 
         Matches matches = reBros(familyIsOnePerson).run(request);
 
@@ -98,8 +98,8 @@ public class ReBrosMust {
     @Test
     @Parameters(method = "browseArraysValues")
     public void browse_arrays_to_find_all_matches(String fieldName, Node match1, Node match2) {
-        Request request = new Request();
-        request.select(fieldName);
+        Request request = new Request()
+                .select(fieldName);
 
         Matches matches = reBros(familyIsAnArrayOfPersons).run(request);
 
@@ -119,9 +119,9 @@ public class ReBrosMust {
     @Test
     @Parameters(method = "whereClausesValues")
     public void filter_matches_not_fitting_where_clauses(String fieldName, String fieldValue, Node expectedNode) {
-        Request request = new Request();
-        request.select("person");
-        request.where(fieldName, fieldValue);
+        Request request = new Request()
+                .select("person")
+                .where(fieldName, fieldValue);
 
         Matches matches = reBros(familyIsAnArrayOfPersons).run(request);
 
@@ -140,9 +140,9 @@ public class ReBrosMust {
 
     @Test
     public void filter_matches_not_fitting_all_where_clauses() {
-        Request request = new Request();
-        request.select("person");
-        request.where("first_name", "2");
+        Request request = new Request()
+                .select("person")
+                .where("first_name", "2");
 
         Matches matches = reBros(familyIsAnArrayOfPersons).run(request);
 

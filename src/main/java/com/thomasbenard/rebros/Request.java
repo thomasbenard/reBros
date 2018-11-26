@@ -11,12 +11,14 @@ public class Request {
     private List<String> selectedFields = new ArrayList<>();
     private Map<String, Node> whereClauses = new HashMap<>();
 
-    public void select(String... field) {
+    public Request select(String... field) {
         selectedFields.addAll(Arrays.asList(field));
+        return this;
     }
 
-    public void where(String memberName, String value) {
+    public Request where(String memberName, String value) {
         whereClauses.put(memberName, leafNode(value));
+        return this;
     }
 
     Matches apply(Node root) {
