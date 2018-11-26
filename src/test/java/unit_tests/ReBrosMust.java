@@ -133,7 +133,8 @@ public class ReBrosMust {
     private Object[] whereClausesValues() {
         return new Object[]{
                 new Object[]{"id", "1", jean()},
-                new Object[]{"id", "2", charles()}
+                new Object[]{"id", "2", charles()},
+                new Object[]{"first_name", "Charles", charles()}
         };
     }
 }

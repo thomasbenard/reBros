@@ -2,6 +2,7 @@ package com.thomasbenard.rebros;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.thomasbenard.rebros.Matches.emptyResult;
 import static com.thomasbenard.rebros.Node.leafNode;
@@ -29,11 +30,10 @@ public class Request {
     }
 
     private List<Node> filterWhereClauses(List<Node> selectedFields) {
-        if (!whereClauses.isEmpty()) {
-            return selectedFields.stream()
-                    .filter(node -> node.contains(whereClauses.get("id")))
-                    .collect(Collectors.toList());
+        Stream<Node> stream = selectedFields.stream();
+        for (String parameterName : whereClauses.keySet()) {
+            stream = stream.filter(node -> node.contains(whereClauses.get(parameterName)));
         }
-        return selectedFields;
+        return stream.collect(Collectors.toList());
     }
 }
