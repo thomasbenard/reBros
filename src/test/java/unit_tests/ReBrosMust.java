@@ -1,17 +1,21 @@
 package unit_tests;
 
 import com.thomasbenard.rebros.*;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static com.thomasbenard.rebros.Matches.emptyResult;
 import static com.thomasbenard.rebros.Node.objectNode;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+@RunWith(JUnitParamsRunner.class)
 public class ReBrosMust {
 
-    private final String complexInputData = "{family: {person: {id: 1, first_name: Jean, last_name: Bonneau}}}";
-    private final String familyIsAnArray = "{family: ["
+    private final String familyIsOnePerson = "{family: {person: {id: 1, first_name: Jean, last_name: Bonneau}}}";
+    private final String familyIsAnArrayOfPersons = "{family: ["
             + "{person: {id: 1, first_name: Jean, last_name: Bonneau}}, "
             + "{person: {id: 2, first_name: Charles, last_name: Cuttery}}]}";
 
@@ -48,7 +52,7 @@ public class ReBrosMust {
         Request request = new Request();
         request.select("non_existent_field");
 
-        Matches matches = reBros(complexInputData).run(request);
+        Matches matches = reBros(familyIsOnePerson).run(request);
 
         assertThat(matches, equalTo(emptyResult()));
     }
@@ -58,7 +62,7 @@ public class ReBrosMust {
         Request request = new Request();
         request.select("id", "last_name");
 
-        Matches matches = reBros(complexInputData).run(request);
+        Matches matches = reBros(familyIsOnePerson).run(request);
 
         Matches expectedMatches = emptyResult()
                 .put("id", "1")
@@ -84,7 +88,7 @@ public class ReBrosMust {
         Request request = new Request();
         request.select("person");
 
-        Matches matches = reBros(complexInputData).run(request);
+        Matches matches = reBros(familyIsOnePerson).run(request);
 
         Matches expectedMatches = emptyResult()
                 .put("person", jean());
@@ -92,54 +96,44 @@ public class ReBrosMust {
     }
 
     @Test
-    public void return_all_complex_matches() {
+    @Parameters(method = "browseArraysValues")
+    public void browse_arrays_to_find_all_matches(String fieldName, Node match1, Node match2) {
         Request request = new Request();
-        request.select("person");
+        request.select(fieldName);
 
-        Matches matches = reBros(familyIsAnArray).run(request);
+        Matches matches = reBros(familyIsAnArrayOfPersons).run(request);
 
         Matches expectedMatches = emptyResult()
-                .put("person", jean())
-                .put("person", charles());
+                .put(fieldName, match1)
+                .put(fieldName, match2);
         assertThat(matches, equalTo(expectedMatches));
     }
 
-    @Test
-    public void return_complex_matches_containing_an_array() {
-        Request request = new Request();
-        request.select("family");
-
-        Matches matches = reBros(familyIsAnArray).run(request);
-
-        Matches expectedMatches = emptyResult()
-                .put("family", objectNode().addField("person", jean()))
-                .put("family", objectNode().addField("person", charles()));
-        assertThat(matches, equalTo(expectedMatches));
+    private Object[] browseArraysValues() {
+        return new Object[]{
+                new Object[]{"person", jean(), charles()},
+                new Object[]{"family", objectNode().addField("person", jean()), objectNode().addField("person", charles())}
+        };
     }
 
     @Test
-    public void select_matches_fitting_conditions() {
+    @Parameters(method = "whereClausesValues")
+    public void filter_matches_not_fitting_where_clauses(String fieldName, String fieldValue, Node expectedNode) {
         Request request = new Request();
         request.select("person");
-        request.where("id", "1");
+        request.where(fieldName, fieldValue);
 
-        Matches matches = reBros(familyIsAnArray).run(request);
+        Matches matches = reBros(familyIsAnArrayOfPersons).run(request);
 
         Matches expectedMatches = emptyResult()
-                .put("person", jean());
+                .put("person", expectedNode);
         assertThat(matches, equalTo(expectedMatches));
     }
 
-    @Test
-    public void select_matches_fitting_conditions_2() {
-        Request request = new Request();
-        request.select("person");
-        request.where("id", "2");
-
-        Matches matches = reBros(familyIsAnArray).run(request);
-
-        Matches expectedMatches = emptyResult()
-                .put("person", charles());
-        assertThat(matches, equalTo(expectedMatches));
+    private Object[] whereClausesValues() {
+        return new Object[]{
+                new Object[]{"id", "1", jean()},
+                new Object[]{"id", "2", charles()}
+        };
     }
 }
