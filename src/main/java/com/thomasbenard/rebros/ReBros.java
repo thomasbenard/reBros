@@ -8,7 +8,7 @@ public class ReBros {
     }
 
     public Matches run(Request request) {
-        return request.apply(content.buildMatch());
+        return request.apply(content.buildNode());
     }
 
 }
