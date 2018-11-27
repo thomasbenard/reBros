@@ -1,0 +1,18 @@
+{
+  "family": [
+    {
+      "person": {
+        "id": 1,
+        "first_name": "Jean",
+        "last_name": "Bonneau"
+      }
+    },
+    {
+      "person": {
+        "id": 2,
+        "first_name": "Charles",
+        "last_name": "Cuttery"
+      }
+    }
+  ]
+}
